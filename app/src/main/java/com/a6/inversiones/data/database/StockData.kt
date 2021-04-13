@@ -10,6 +10,7 @@ data class StockData(
     @SerializedName("value") val value: Double,
     @SerializedName("symbol") val symbol: String,
 ) {
+
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
