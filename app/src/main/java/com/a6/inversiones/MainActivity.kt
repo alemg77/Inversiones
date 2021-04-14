@@ -2,6 +2,7 @@ package com.a6.inversiones
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.a6.inversiones.data.SharedPreferencesManager.Companion.Jpmorgan_Chase
 import java.time.LocalDateTime
 
 
@@ -25,11 +26,9 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel = MarketStockViewModel()
 
-        val SYMBOL = "AAPL"
 
-        //viewModel.getNewData(SYMBOL)
-        viewModel.getDB(SYMBOL)
-
+        //viewModel.getNewData(Jpmorgan_Chase)
+        viewModel.getDB(Jpmorgan_Chase)
 
         //viewModel.getEndOfDay("AAPL,KO,JNJ,MELI")
         //viewModel.getDB("KO")

@@ -22,6 +22,7 @@ class SharedPreferencesManager(app: Application) {
         saveLong(key, value.toLong())
     }
 
+
     fun getOscilacion(key: String): Double {
         return getLong(key).toDouble()
     }
@@ -60,10 +61,50 @@ class SharedPreferencesManager(app: Application) {
     }
 
     companion object {
+        const val Jpmorgan_Chase = "JPM"
+        const val United_States_Steel = "X"
+        const val Amazon = "AMZN"
+        const val Tesla = "TSLA"
+        const val Petroleo_Brasileiro = "PBR"
+        const val Alibaba_Group = "BABA"
         const val APLE = "AAPL"
+        const val Walmart = "WMT"
+        const val Nvidia = "NVDA"
+        const val Microsoft = "MSFT"
+        const val Disney = "DISN"
+        const val BioceresCrop = "BIOX"
+        const val ExxonMobil = "XOM"
+        const val FaceBook = "FB"
+        const val Baidu = "BIDU"
+        const val Zoom_Video = "ZM"
+        const val AT_T = "T"
+        const val BARRIC_GOLD = "GOLD"
+        const val Berkshire_Hathaway = "BRKB"
         const val COCA_COLA = "KO"
         const val JOHNSON_AND_JOHNSON = "JNJ"
         const val MERCADO_LIBRE = "MELI"
+        const val Nike = "NKE"
+        const val PayPal = "PYPL"
+        const val Bank_of_America = "BA.C"
+        const val Tenaris = "TEN"
+        const val Harmony_Gold = "HMY"
+        const val Google = "GOOGL"
+        const val Gazprom = "OGZD"
+        const val Vale = "VALE"
+        const val General_Electric = "GE"
+        const val Square_Inc = "SQ"
+        const val Caterpillar = "CAT"
+        const val Pfizer = "PFE"
+        const val Snowflake_Inc = "SNOW"
+        const val Globant = "GLNT"
+        const val Shopify_Inc = "SHOP"
+        const val Spotify_Technol = "SPOT"
+        const val Mastercard_Inc = "MA"
+        const val AMD = "AMD"
+        const val Netflix = "NFLX"
+        const val Astrazeneca = "AZN"
+        const val Intel = "INTC"
+        const val Qualcomm = "QCOM"
         private const val PREFERENCES_FILE = "secret_shared_prefs"
     }
 }
