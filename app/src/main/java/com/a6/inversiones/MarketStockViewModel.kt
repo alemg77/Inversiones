@@ -19,7 +19,6 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
     fun getDB(symbol: String) {
         viewModelScope.launch(Dispatchers.IO) {
 
-
             val db: List<StockData> = marketStockRepository.getDB(symbol)!!
 
             val highestPrice = db.maxByOrNull { it.value }
@@ -27,7 +26,6 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
             Log.d(TAG, highestPrice.toString())
         }
     }
-
 
     fun getEndOfDay(symbols: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -42,7 +40,6 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
             }
         }
     }
-
 
 }
 

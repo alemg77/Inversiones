@@ -15,6 +15,10 @@ interface StockDao {
     suspend fun getAll(symbol: String): List<StockData>
 
 
+    @Query("SELECT * FROM stockData WHERE symbol=(:symbol) AND date=(:day) ")
+    suspend fun get(symbol: String, day: String): List<StockData>
+
+
     @Insert
     suspend fun insert(vararg medicions: StockData)
 
