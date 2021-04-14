@@ -9,7 +9,8 @@ interface ApiMarketStack {
     @GET(END_OF_DAY)
     suspend fun fetchEndOfDay(
         @Query(ACCESS_KEY) accessKey: String,
-        @Query(SYMBOLS) symbols: String
+        @Query(SYMBOLS) symbols: String,
+        @Query(LIMIT) limit: Int,
     ): EndOfDayResponse
 
     @GET(END_OF_DAY)
@@ -17,7 +18,8 @@ interface ApiMarketStack {
         @Query(ACCESS_KEY) accessKey: String,
         @Query(SYMBOLS) symbols: String,
         @Query(DATE_FROM) dateFrom: String,
-        @Query(DATE_TO) dateTo: String
+        @Query(DATE_TO) dateTo: String,
+        @Query(LIMIT) limit: Int,
     ): EndOfDayResponse
 
     companion object {
@@ -26,6 +28,7 @@ interface ApiMarketStack {
         private const val END_OF_DAY = "eod"
         private const val DATE_FROM = "date_from"
         private const val DATE_TO = "date_to"
+        private const val LIMIT = "limit"
     }
 
 }

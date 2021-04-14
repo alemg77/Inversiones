@@ -19,11 +19,12 @@ class MarketStackRepository(app: Application) {
         return db?.stockDao()?.getAll(symbol)
     }
 
-    suspend fun getDB(symbols: String, day: String): List<StockData>? {
-        return db?.stockDao()?.get(symbols, day)
+    suspend fun getDB(data: StockData): List<StockData>? {
+        return db?.stockDao()?.get(data.symbol, data.date)
     }
 
-    suspend fun getData(symbols: String): DataResult<out Any> {
+
+    suspend fun getNewData(symbols: String): DataResult<out Any> {
 
         return when (val response = apiService.getEndOfDay(symbols)) {
             is DataResult.Error -> {
@@ -31,25 +32,48 @@ class MarketStackRepository(app: Application) {
             }
             is DataResult.Success -> {
                 val data = (response.data as EndOfDayResponse).data
-                val allData = ArrayList<StockData>()
+                var newValue = 0
                 for (d in data) {
 
-                    val stockData = StockData(d.date.substring(0, 10), d.close, d.symbol)
-                    allData.add(stockData)
-
-                    var newValue = 0
+                    // Transformo responde en database
+                    val stockData = StockData(d.date.substring(0, 10), d.adjClose, d.symbol)
 
                     // Verifica si el valor esta en la base de datos y lo agrega si no esta
-                    val today = getDB(stockData.symbol, stockData.date)
-                    if (today.isNullOrEmpty()) {
+                    if (getDB(stockData).isNullOrEmpty()) {
                         newValue++;
                         db?.stockDao()?.insert(stockData)
                     }
-                    Log.d(TAG, "Agregarmos $newValue valores nuevos")
 
                 }
+                Log.d(TAG, "Agregarmos $newValue valores nuevos")
+                DataResult.Success(newValue)
+            }
+        }
+    }
 
-                DataResult.Success(allData)
+    suspend fun getNewData(symbols: String, dateFrom: String, dateTo: String): DataResult<out Any> {
+
+        return when (val response = apiService.getEndOfDay(symbols, dateFrom, dateTo)) {
+            is DataResult.Error -> {
+                response
+            }
+            is DataResult.Success -> {
+                val data = (response.data as EndOfDayResponse).data
+                var newValue = 0
+                for (d in data) {
+
+                    // Transformo responde en database
+                    val stockData = StockData(d.date.substring(0, 10), d.close, d.symbol)
+
+                    // Verifica si el valor esta en la base de datos y lo agrega si no esta
+                    if (getDB(stockData).isNullOrEmpty()) {
+                        newValue++;
+                        db?.stockDao()?.insert(stockData)
+                    }
+
+                }
+                Log.d(TAG, "Agregarmos $newValue valores nuevos")
+                DataResult.Success(newValue)
             }
         }
     }

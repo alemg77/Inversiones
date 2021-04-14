@@ -35,7 +35,7 @@ class MarketStackRetrofitBuilder {
 
     suspend fun getEndOfDay(symbols: String): DataResult<out Any> {
         return try {
-            val fetchEndOfDay = api.fetchEndOfDay(API_KEY, symbols)
+            val fetchEndOfDay = api.fetchEndOfDay(API_KEY, symbols, 1000)
             DataResult.Success(fetchEndOfDay)
         } catch (e: Throwable) {
             DataResult.Error(e.toErrorResult())
@@ -48,7 +48,7 @@ class MarketStackRetrofitBuilder {
         dateTo: String
     ): DataResult<out Any> {
         return try {
-            val fetchEndOfDay = api.fetchEndOfDay(API_KEY, symbols, dateFrom, dateTo)
+            val fetchEndOfDay = api.fetchEndOfDay(API_KEY, symbols, dateFrom, dateTo, 1000)
             DataResult.Success(fetchEndOfDay)
         } catch (e: Throwable) {
             DataResult.Error(e.toErrorResult())
