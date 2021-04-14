@@ -25,9 +25,11 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel = MarketStockViewModel()
 
-        viewModel.getDB("AAPL")
+        val SYMBOL = "AAPL"
 
-        //viewModel.getNewData("AAPL")
+        //viewModel.getNewData(SYMBOL)
+        viewModel.getDB(SYMBOL)
+
 
         //viewModel.getEndOfDay("AAPL,KO,JNJ,MELI")
         //viewModel.getDB("KO")
@@ -36,5 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val TAG = "TAGGG"
+
+
     }
 }

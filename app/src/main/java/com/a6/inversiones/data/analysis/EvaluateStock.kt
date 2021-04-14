@@ -11,8 +11,8 @@ class EvaluateStock {
         return highestPrice.value
     }
 
-    fun evaluateBuy(data: List<StockData>): Boolean {
-        val coefficient = (100 - CAIDA_COMPRA_PORCIENTO) / 100
+    fun evaluateBuy(data: List<StockData>, oscilacion: Double): Boolean {
+        val coefficient = (100 - oscilacion) / 100
         val test = maxValue(data) * coefficient
         return data[0].value < test
     }
@@ -33,7 +33,7 @@ class EvaluateStock {
         return false
     }
 
-    fun testLogic(data: List<StockData>) {
+    fun testLogic(data: List<StockData>, oscilacion: Double): Double {
 
         var money = 100.0
         var valueLastBuy = 0.0
@@ -45,7 +45,7 @@ class EvaluateStock {
             val subData = data.subList(k, data.size)
 
             if (money > 0) {
-                if (evaluateBuy(subData)) {
+                if (evaluateBuy(subData, oscilacion)) {
                     stock = (money * CONSTANTE_COMISION) / subData[0].value
                     money = 0.0
                     valueLastBuy = subData[0].value
@@ -71,17 +71,15 @@ class EvaluateStock {
                     )
                 }
             }
-
         }
 
         val cap = stock * data[0].value * CONSTANTE_COMISION + money
-        Log.d(TAG, " ******** Resultado Final: $cap  *********************")
-
+        Log.d(TAG, " *** Resultado: $cap  ***")
+        return cap
     }
 
     companion object {
-        const val MIN_DAY_ANALISIS = 30
-        const val CAIDA_COMPRA_PORCIENTO: Double = 16.0
+        const val MIN_DAY_ANALISIS = 45
         const val CONSTANTE_COMISION: Double = 0.98
     }
 
