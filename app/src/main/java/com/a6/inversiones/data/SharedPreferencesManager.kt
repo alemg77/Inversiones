@@ -61,17 +61,18 @@ class SharedPreferencesManager(app: Application) {
     }
 
     companion object {
-        const val Jpmorgan_Chase = "JPM"
-        const val United_States_Steel = "X"
-        const val Amazon = "AMZN"
-        const val Tesla = "TSLA"
+
+        const val SYMBOL_Jpmorgan_Chase = "JPM"
+        const val SYMBOL_United_States_Steel = "X"
+        const val SYMBOLS_Amazon = "AMZN"
+        const val SYMBOLS_Tesla = "TSLA"
         const val Petroleo_Brasileiro = "PBR"
         const val Alibaba_Group = "BABA"
         const val APLE = "AAPL"
         const val Walmart = "WMT"
         const val Nvidia = "NVDA"
         const val Microsoft = "MSFT"
-        const val Disney = "DISN"
+        const val Disney = "DIS"
         const val BioceresCrop = "BIOX"
         const val ExxonMobil = "XOM"
         const val FaceBook = "FB"
@@ -79,24 +80,21 @@ class SharedPreferencesManager(app: Application) {
         const val Zoom_Video = "ZM"
         const val AT_T = "T"
         const val BARRIC_GOLD = "GOLD"
-        const val Berkshire_Hathaway = "BRKB"
         const val COCA_COLA = "KO"
         const val JOHNSON_AND_JOHNSON = "JNJ"
         const val MERCADO_LIBRE = "MELI"
         const val Nike = "NKE"
         const val PayPal = "PYPL"
-        const val Bank_of_America = "BA.C"
+        const val Bank_of_America = "BAC"
         const val Tenaris = "TEN"
         const val Harmony_Gold = "HMY"
         const val Google = "GOOGL"
-        const val Gazprom = "OGZD"
         const val Vale = "VALE"
         const val General_Electric = "GE"
         const val Square_Inc = "SQ"
         const val Caterpillar = "CAT"
         const val Pfizer = "PFE"
         const val Snowflake_Inc = "SNOW"
-        const val Globant = "GLNT"
         const val Shopify_Inc = "SHOP"
         const val Spotify_Technol = "SPOT"
         const val Mastercard_Inc = "MA"
@@ -105,6 +103,19 @@ class SharedPreferencesManager(app: Application) {
         const val Astrazeneca = "AZN"
         const val Intel = "INTC"
         const val Qualcomm = "QCOM"
+        const val Taiwan_Semiconductor = "TSM"
+        const val Snap_Inc = "SNAP"
+
+        val SYMBOLS = listOf(
+            SYMBOL_Jpmorgan_Chase, SYMBOL_United_States_Steel,
+            SYMBOLS_Amazon, SYMBOLS_Tesla, Petroleo_Brasileiro, Alibaba_Group,
+            APLE, Walmart, Nvidia, Microsoft, Disney, BioceresCrop, ExxonMobil, FaceBook, Baidu,
+            Zoom_Video, AT_T, BARRIC_GOLD, COCA_COLA, JOHNSON_AND_JOHNSON,
+            MERCADO_LIBRE, Nike, PayPal, Bank_of_America, Nike, Tenaris, Harmony_Gold, Google,
+            Vale, General_Electric, Square_Inc, Caterpillar, Pfizer, Snowflake_Inc,
+            Shopify_Inc, Spotify_Technol, Mastercard_Inc, AMD, Netflix, Astrazeneca,
+            Intel, Qualcomm, Taiwan_Semiconductor, Snap_Inc
+        )
         private const val PREFERENCES_FILE = "secret_shared_prefs"
     }
 }

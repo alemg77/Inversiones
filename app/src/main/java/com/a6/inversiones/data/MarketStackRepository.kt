@@ -45,7 +45,7 @@ class MarketStackRepository(app: Application) {
                     }
 
                 }
-                Log.d(TAG, "Agregarmos $newValue valores nuevos")
+                Log.d(TAG, "Agregarmos $newValue valores nuevos a $symbols")
                 DataResult.Success(newValue)
             }
         }
