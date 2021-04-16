@@ -5,8 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.a6.inversiones.MainActivity.Companion.TAG
 import com.a6.inversiones.data.MarketStackRepository
-import com.a6.inversiones.data.SharedPreferencesManager.Companion.SYMBOLS
 import com.a6.inversiones.data.analysis.EvaluateStock
+import com.a6.inversiones.data.analysis.EvaluateStock.Companion.COEFICIENTE_NO_VENDER_SI_VOY_GANADO
+import com.a6.inversiones.data.analysis.EvaluateStock.Companion.COEFIENTE_NO_COMPRAR_CUANDO_CAE
+import com.a6.inversiones.data.analysis.EvaluateStock.Companion.CONSTANTE_COMISION
+import com.a6.inversiones.data.analysis.EvaluateStock.Companion.MIN_DAY_ANALISIS
 import com.a6.inversiones.data.models.Estimador
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
@@ -19,9 +22,14 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
     private var coeficientes: MutableList<Estimador> = mutableListOf()
 
-    private val evaluate = EvaluateStock()
+    private val evaluate = EvaluateStock(
+        MIN_DAY_ANALISIS,
+        CONSTANTE_COMISION,
+        COEFICIENTE_NO_VENDER_SI_VOY_GANADO,
+        COEFIENTE_NO_COMPRAR_CUANDO_CAE
+    )
 
-    fun evalueteCoeficiente() {
+    fun evalueteCoeficiente(symbol: List<String>) {
 
         val buy = 0.15
         val sell = 0.15
@@ -32,9 +40,9 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
             var accumulateResult = 0.0
             var accumumateDays = 0
 
-            for (i in SYMBOLS.indices) {
+            for (i in symbol.indices) {
 
-                val db = marketStockRepository.getDB(SYMBOLS[i])
+                val db = marketStockRepository.getDB(symbol[i])
 
                 db?.let {
 
@@ -45,7 +53,7 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
                         accumulateResult += test.result
                         accumumateDays += test.daysInvested
                     }
-                    Log.d(TAG, " ${SYMBOLS[i]} rindio ${test.result} ")
+                    Log.d(TAG, " ${symbol[i]} rindio ${test.result} ")
                 }
             }
 
@@ -61,11 +69,12 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
             Log.d(TAG, "Fin de los calculos coeficientes")
 
-            for (i in SYMBOLS.indices) {
-                val db = marketStockRepository.getDB(SYMBOLS[i])
+            for (i in symbol.indices) {
+                val db = marketStockRepository.getDB(symbol[i])
                 db?.let {
-                    if (evaluate.evaluateBuy(db, buy)) {
-                        Log.d(TAG, "Compra: ${SYMBOLS[i]}")
+                    val evaluateBuy = evaluate.evaluateBuy(db, buy)
+                    if (evaluateBuy > 0) {
+                        Log.d(TAG, "Compra: ${symbol[i]}  $evaluateBuy")
                     }
                 }
             }

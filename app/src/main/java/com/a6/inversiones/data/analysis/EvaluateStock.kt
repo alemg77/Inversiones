@@ -3,21 +3,32 @@ package com.a6.inversiones.data.analysis
 import com.a6.inversiones.data.database.StockData
 import com.a6.inversiones.data.models.TestResult
 
-class EvaluateStock {
+class EvaluateStock(
+    val diasMinimosAnalisis: Int,
+    val comisionCompra: Double,
+    val coeficienteVenderSiVoyGanando: Double,
+    val coeficienteNoComprarCuandoCae: Double,
+) {
+
 
     fun maxValue(data: List<StockData>): Double {
         val highestPrice = data.maxByOrNull { it.value } ?: return 0.0
         return highestPrice.value
     }
 
-    fun evaluateBuy(data: List<StockData>, buy: Double): Boolean {
+    fun evaluateBuy(data: List<StockData>, buy: Double): Double {
         val test = maxValue(data) * (1 - buy)
 
         if ((data[0].value * COEFIENTE_NO_COMPRAR_CUANDO_CAE) < data[1].value) {
-            return false
+            return 0.0
         }
 
-        return data[0].value < test
+        return if (data[0].value > test) {
+            0.0
+        } else {
+            test / data[0].value
+        }
+
     }
 
     private fun evaluateRetire(data: List<StockData>, lastBuyValue: Double, sell: Double): Boolean {
@@ -74,7 +85,7 @@ class EvaluateStock {
 
             if (subData[subData.size - 1].value < subData[subData.size - MIN_DAY_ANALISIS].value) {
                 if (money > 0) {
-                    if (evaluateBuy(subData, buy)) {
+                    if (evaluateBuy(subData, buy) > 0) {
                         stock = (money * CONSTANTE_COMISION) / subData[0].value
                         money = 0.0
                         valueLastBuy = subData[0].value
@@ -154,8 +165,8 @@ class EvaluateStock {
     companion object {
         const val MIN_DAY_ANALISIS = 80
         const val CONSTANTE_COMISION: Double = 0.98 // 1,5% de comision y 0,5% de spreed
-        const val COEFICIENTE_NO_VENDER_SI_VOY_GANADO = 1.01
-        const val COEFIENTE_NO_COMPRAR_CUANDO_CAE = 1.25
+        const val COEFICIENTE_NO_VENDER_SI_VOY_GANADO = 1.009
+        const val COEFIENTE_NO_COMPRAR_CUANDO_CAE = 1.10
     }
 
 }

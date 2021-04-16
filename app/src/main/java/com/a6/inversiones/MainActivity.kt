@@ -2,6 +2,7 @@ package com.a6.inversiones
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.a6.inversiones.data.SharedPreferencesManager.Companion.SYMBOLS2
 import java.time.LocalDateTime
 
 
@@ -16,11 +17,10 @@ class MainActivity : AppCompatActivity() {
         val localDate = LocalDateTime.now().toLocalDate()
 
         //val viewModel = MarketStockViewModel()
-        //viewModel.getAllData()
+        //viewModel.getAllData(SYMBOLS2)
 
         val viewModel = EstimatorViewModel()
-
-        viewModel.evalueteCoeficiente()
+        viewModel.evalueteCoeficiente(SYMBOLS2)
 
 
     }
