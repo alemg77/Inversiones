@@ -106,18 +106,21 @@ class SharedPreferencesManager(app: Application) {
         const val Taiwan_Semiconductor = "TSM"
         const val Snap_Inc = "SNAP"
 
-        val SYMBOLS = listOf(
+        val SYMBOLS1 = listOf(
             SYMBOL_Jpmorgan_Chase, SYMBOL_United_States_Steel,
             SYMBOLS_Amazon, SYMBOLS_Tesla, Petroleo_Brasileiro, Alibaba_Group,
             APLE, Walmart, Nvidia, Microsoft, Disney, BioceresCrop, ExxonMobil, FaceBook, Baidu,
-            Zoom_Video, AT_T, BARRIC_GOLD, COCA_COLA, JOHNSON_AND_JOHNSON,
-            MERCADO_LIBRE, Nike, PayPal, Bank_of_America, Nike, Tenaris, Harmony_Gold, Google,
-            Vale, General_Electric, Square_Inc, Caterpillar, Pfizer, Snowflake_Inc,
-            Shopify_Inc, Spotify_Technol, Mastercard_Inc, AMD, Netflix, Astrazeneca,
-            Intel, Qualcomm, Taiwan_Semiconductor, Snap_Inc
+            Zoom_Video, AT_T, BARRIC_GOLD, COCA_COLA, JOHNSON_AND_JOHNSON, Intel, Qualcomm
         )
 
         val SYMBOLS2 = listOf(
+            MERCADO_LIBRE, Nike, PayPal, Bank_of_America, Nike, Tenaris, Harmony_Gold, Google,
+            Vale, General_Electric, Square_Inc, Caterpillar, Pfizer, Snowflake_Inc,
+            Shopify_Inc, Spotify_Technol, Mastercard_Inc, AMD, Netflix, Astrazeneca,
+            Taiwan_Semiconductor, Snap_Inc
+        )
+
+        val SYMBOLS3 = listOf(
             "UNH",
             "C",
             "BBD",
@@ -142,7 +145,10 @@ class SharedPreferencesManager(app: Application) {
             "PG",
             "TWTR",
             "AVGO",
-            "GGB",
+            "GGB"
+        )
+
+        val SYMBOLS4 = listOf(
             "CL",
             "ADBE",
             "CVX",
