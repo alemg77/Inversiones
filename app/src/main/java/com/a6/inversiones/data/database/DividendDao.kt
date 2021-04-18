@@ -12,7 +12,7 @@ interface DividendDao {
     suspend fun getAll(): List<Dividend>
 
     @Query("SELECT * FROM dividend WHERE symbol=(:symbol) ")
-    suspend fun getAll(symbol: String): List<Dividend>
+    suspend fun get(symbol: String): List<Dividend>
 
     @Insert
     suspend fun insert(vararg dividend: Dividend)

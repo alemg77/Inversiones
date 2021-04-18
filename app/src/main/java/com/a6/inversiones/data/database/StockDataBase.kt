@@ -11,7 +11,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 abstract class StockDataBase() : RoomDatabase() {
 
-    abstract fun stockDao(): StockValueDao
+    abstract fun stockValueDao(): StockValueDao
 
     abstract fun dividendDao(): DividendDao
 

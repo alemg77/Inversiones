@@ -38,7 +38,7 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
             for (i in symbol.indices) {
 
-                val db = marketStockRepository.getDB(symbol[i])
+                val db = marketStockRepository.getStockValue(symbol[i])
 
                 db?.let {
                     val test = evaluate.testLogic(db, buy, sell)

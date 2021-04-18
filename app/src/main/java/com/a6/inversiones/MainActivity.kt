@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.a6.inversiones.data.SharedPreferencesManager.Companion.SYMBOLS1
 import java.io.*
 import java.time.LocalDateTime
 
@@ -16,26 +15,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val localDate = LocalDateTime.now().toLocalDate()
-
         if (!checkPermission()) {
-            Log.d(TAG, "No tengo permiso, voy a pedirlo")
             askForPermission()
-        } else {
-            Log.d(TAG, " Ya tenia permiso antes de empezar")
         }
 
 
+        val localDate = LocalDateTime.now().toLocalDate()
         val viewModel = MarketStockViewModel()
-        //viewModel.test(SYMBOLS)
-        viewModel.getAllData(SYMBOLS1)
+        //viewModel.getDividends()
+
+        viewModel.getStockValue("AAPL")
 
         //val viewModel = EstimatorViewModel()
         //viewModel.evalueteCoeficiente(SYMBOLS1 + SYMBOLS2 + SYMBOLS3 + SYMBOLS4)
 
 
-        Log.d(TAG, "Fin ??")
+        Log.d(TAG, "Fin del onCreate en MainActivity")
     }
 
 
