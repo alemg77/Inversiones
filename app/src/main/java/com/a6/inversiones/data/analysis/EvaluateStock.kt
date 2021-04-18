@@ -3,12 +3,7 @@ package com.a6.inversiones.data.analysis
 import com.a6.inversiones.data.database.StockValue
 import com.a6.inversiones.data.models.TestResult
 
-class EvaluateStock(
-    val diasMinimosAnalisis: Int,
-    val comisionCompra: Double,
-    val coeficienteVenderSiVoyGanando: Double,
-    val coeficienteNoComprarCuandoCae: Double,
-) {
+class EvaluateStock() {
 
     fun maxValue(data: List<StockValue>): Double {
         val highestPrice = data.maxByOrNull { it.value } ?: return 0.0
@@ -18,22 +13,30 @@ class EvaluateStock(
     fun evaluateBuy(data: List<StockValue>, buy: Double): Double {
         val test = maxValue(data) * (1 - buy)
 
-        // 4 dias callendo, no comprar
+        // Si se desploma un dia, no comprar
+        if ((data[0].value * 1.07) < data[1].value) {
+            return 0.0
+        }
+
+        // Si se desploma en dos dias, no comprar
+        if ((data[0].value * 1.08) < data[2].value) {
+            return 0.0
+        }
+
+        // Si se desploma en tres dias, no comprar
+        if ((data[0].value * 1.09) < data[3].value) {
+            return 0.0
+        }
+
+        // Muchos dias callendo, no comprar
         if ((data[0].value < data[1].value)
             && (data[1].value < data[2].value)
             && (data[2].value < data[3].value)
             && (data[3].value < data[4].value)
+            && (data[4].value < data[5].value)
         ) {
             return 0.0
         }
-
-        /*
-        if ((data[0].value * COEFIENTE_NO_COMPRAR_CUANDO_CAE) < data[1].value) {
-            return 0.0
-        }
-
-         */
-
 
         return if (data[0].value > test) {
             0.0
@@ -52,7 +55,27 @@ class EvaluateStock(
         val actualValue = data[0].value
 
         // Si vengo subiendo, no vendo
-        if (data[0].value > (data[1].value * COEFICIENTE_NO_VENDER_SI_VOY_GANADO)) {
+        if (data[0].value > (data[1].value * 1.015)) {
+            return false
+        }
+
+        // Si vengo subiendo, no vendo
+        if (data[0].value > (data[2].value * 1.045)) {
+            return false
+        }
+
+        // Si vengo subiendo, no vendo
+        if (data[0].value > (data[3].value * 1.065)) {
+            return false
+        }
+
+        // Si vengo subiendo varios dias seguidos, no vendo
+        if ((data[0].value > (data[1].value))
+            && ((data[1].value > (data[2].value)))
+            && ((data[2].value > (data[3].value)))
+            && ((data[3].value > (data[4].value)))
+            && ((data[4].value > (data[5].value)))
+        ) {
             return false
         }
 
@@ -70,15 +93,14 @@ class EvaluateStock(
         var stock = 0.0
         var daysInverted = 0
 
-        for (i in 0..data.size - MIN_DAY_ANALISIS) {
+        for (i in 0..data.size - MIN_DAY_ANALISIS_INICIO) {
 
-            val k = data.size - MIN_DAY_ANALISIS - i
+            val k = data.size - MIN_DAY_ANALISIS_INICIO - i
             val subData = data.subList(k, data.size)
 
-            if (subData[subData.size - 1].value < subData[subData.size - MIN_DAY_ANALISIS].value) {
+            if (subData[subData.size - 1].value < subData[subData.size - MIN_DAY_ANALISIS_INICIO].value) {
                 if (money > 0) {
-                    // No quiero analizar el coeficiente si no tengo datos suficientes para analizar despues que paso
-                    if (data.size < subData.size + 30) {
+                    if (data.size < subData.size + MIN_DAY_ANALISIS_FIN) {
                         if (evaluateBuy(subData, buy) > 0) {
                             stock = (money * CONSTANTE_COMISION) / subData[0].value
                             money = 0.0
@@ -105,10 +127,15 @@ class EvaluateStock(
     }
 
     companion object {
-        const val MIN_DAY_ANALISIS = 80
+
+        // No se puede decidir sin historial
+        const val MIN_DAY_ANALISIS_INICIO = 80
+
+        // No quiero analizar el coeficiente si no tengo datos suficientes para analizar despues que paso
+        const val MIN_DAY_ANALISIS_FIN = 30
+
         const val CONSTANTE_COMISION: Double = 0.98 // 1,5% de comision y 0,5% de spreed
-        const val COEFICIENTE_NO_VENDER_SI_VOY_GANADO = 1.009
-        const val COEFIENTE_NO_COMPRAR_CUANDO_CAE = 1.10
+
     }
 
 }

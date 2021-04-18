@@ -28,12 +28,7 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
         coeficientes.sortBy { it.valuex100 }
      */
 
-    private val evaluate = EvaluateStock(
-        EvaluateStock.MIN_DAY_ANALISIS,
-        EvaluateStock.CONSTANTE_COMISION,
-        EvaluateStock.COEFICIENTE_NO_VENDER_SI_VOY_GANADO,
-        EvaluateStock.COEFIENTE_NO_COMPRAR_CUANDO_CAE
-    )
+    private val evaluate = EvaluateStock()
 
 
     fun getNewDividends(symbol: List<String>) {

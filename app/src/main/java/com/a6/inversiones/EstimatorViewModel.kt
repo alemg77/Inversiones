@@ -6,9 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.a6.inversiones.MainActivity.Companion.TAG
 import com.a6.inversiones.data.StockRepository
 import com.a6.inversiones.data.analysis.EvaluateStock
-import com.a6.inversiones.data.analysis.EvaluateStock.Companion.COEFICIENTE_NO_VENDER_SI_VOY_GANADO
-import com.a6.inversiones.data.analysis.EvaluateStock.Companion.COEFIENTE_NO_COMPRAR_CUANDO_CAE
-import com.a6.inversiones.data.analysis.EvaluateStock.Companion.CONSTANTE_COMISION
 import com.a6.inversiones.data.models.TestResult
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
@@ -21,12 +18,7 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
     private var coeficientes: MutableList<TestResult> = mutableListOf()
 
-    private val evaluate = EvaluateStock(
-        80,
-        CONSTANTE_COMISION,
-        COEFICIENTE_NO_VENDER_SI_VOY_GANADO,
-        COEFIENTE_NO_COMPRAR_CUANDO_CAE
-    )
+    private val evaluate = EvaluateStock()
 
     fun evalueteCoeficiente(symbol: List<String>) {
 
@@ -44,8 +36,8 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
                     val test = evaluate.testLogic(db, buy, sell)
                     if (test.daysInvested > 0) {
                         coeficientes.add(test)
+                        Log.d(TAG, " ${symbol[i]} rindio ${test.result} ")
                     }
-                    //Log.d(TAG, " ${symbol[i]} rindio ${test.result} ")
                 }
             }
 
@@ -53,10 +45,12 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
             coeficientes.sortBy { it.result }
 
             // Contemplo haber perdido los mejores por seguridad
+            /*
             for (num in 1..(coeficientes.size / 10)) {
                 Log.e(TAG, "Removed!!")
                 coeficientes.removeLast()
             }
+             */
 
             Log.d(TAG, "Los peores fueron:")
             for (i in 0..4) {
