@@ -1,6 +1,6 @@
 package com.a6.inversiones.data.analysis
 
-import com.a6.inversiones.data.database.StockData
+import com.a6.inversiones.data.database.StockValue
 import com.a6.inversiones.data.models.TestResult
 
 class EvaluateStock(
@@ -10,12 +10,12 @@ class EvaluateStock(
     val coeficienteNoComprarCuandoCae: Double,
 ) {
 
-    fun maxValue(data: List<StockData>): Double {
+    fun maxValue(data: List<StockValue>): Double {
         val highestPrice = data.maxByOrNull { it.value } ?: return 0.0
         return highestPrice.value
     }
 
-    fun evaluateBuy(data: List<StockData>, buy: Double): Double {
+    fun evaluateBuy(data: List<StockValue>, buy: Double): Double {
         val test = maxValue(data) * (1 - buy)
 
         // 4 dias callendo, no comprar
@@ -43,7 +43,11 @@ class EvaluateStock(
 
     }
 
-    private fun evaluateRetire(data: List<StockData>, lastBuyValue: Double, sell: Double): Boolean {
+    private fun evaluateRetire(
+        data: List<StockValue>,
+        lastBuyValue: Double,
+        sell: Double
+    ): Boolean {
 
         val actualValue = data[0].value
 
@@ -58,7 +62,7 @@ class EvaluateStock(
 
     }
 
-    fun testLogic(data: List<StockData>, buy: Double, sell: Double): TestResult {
+    fun testLogic(data: List<StockValue>, buy: Double, sell: Double): TestResult {
 
         var money = 100.0
         var valueLastBuy = 0.0

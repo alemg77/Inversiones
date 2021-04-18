@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.a6.inversiones.MainActivity.Companion.TAG
-import com.a6.inversiones.data.MarketStackRepository
+import com.a6.inversiones.data.StockRepository
 import com.a6.inversiones.data.analysis.EvaluateStock
 import com.a6.inversiones.data.analysis.EvaluateStock.Companion.COEFICIENTE_NO_VENDER_SI_VOY_GANADO
 import com.a6.inversiones.data.analysis.EvaluateStock.Companion.COEFIENTE_NO_COMPRAR_CUANDO_CAE
@@ -17,7 +17,7 @@ import kotlin.math.pow
 
 class EstimatorViewModel : ViewModel(), KoinComponent {
 
-    private val marketStockRepository: MarketStackRepository by inject()
+    private val marketStockRepository: StockRepository by inject()
 
     private var coeficientes: MutableList<TestResult> = mutableListOf()
 

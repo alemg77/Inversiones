@@ -3,10 +3,10 @@ package com.a6.inversiones
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.a6.inversiones.data.MarketStackRepository
 import com.a6.inversiones.data.SharedPreferencesManager
+import com.a6.inversiones.data.StockRepository
 import com.a6.inversiones.data.analysis.EvaluateStock
-import com.a6.inversiones.data.database.StockData
+import com.a6.inversiones.data.database.StockValue
 import com.a6.inversiones.data.models.Estimador
 import com.a6.inversiones.data.network.models.DataResult
 import kotlinx.coroutines.Dispatchers
@@ -17,11 +17,12 @@ import org.koin.core.inject
 
 class MarketStockViewModel : ViewModel(), KoinComponent {
 
-    private val marketStockRepository: MarketStackRepository by inject()
+    private val stockRepository: StockRepository by inject()
 
     private val sharedPreferencesManager: SharedPreferencesManager by inject()
 
     private var coeficientes: MutableList<Estimador> = mutableListOf()
+
 
     /*
         coeficientes.sortBy { it.valuex100 }
@@ -35,10 +36,31 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
     )
 
 
+    fun test(symbol: List<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            var dividendos = mutableListOf<String>()
+            for (i in symbol.indices) {
+
+                when (val result = stockRepository.getDividend(symbol[i])) {
+                    is DataResult.Success -> {
+                        val s = result.data as String
+                        dividendos.add(s)
+                        Log.d(TAG, "  ${symbol[i]} tiene $s")
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+            Log.d(TAG, dividendos.toString())
+        }
+    }
+
+
     fun getAllData(symbol: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
             for (i in symbol.indices) {
-                val db = marketStockRepository.getDB(symbol[i])
+                val db = stockRepository.getDB(symbol[i])
                 if (db.isNullOrEmpty()) {
                     getNewData(symbol[i])
                 } else {
@@ -52,7 +74,7 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
     fun buscarMinimos(symbol: List<String>) {
         viewModelScope.launch {
             for (i in symbol.indices) {
-                val db: List<StockData> = marketStockRepository.getDB(symbol[i])!!
+                val db: List<StockValue> = stockRepository.getDB(symbol[i])!!
                 val maxValue = evaluate.maxValue(db)
                 val actual = 100 * db[0].value / maxValue
                 Log.d(TAG, " ${symbol[i]} esta al $actual%")
@@ -62,7 +84,7 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
 
     fun getNewData(symbol: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (marketStockRepository.getNewData(symbol)) {
+            when (stockRepository.getNewData(symbol)) {
                 is DataResult.Success -> {
 
                 }

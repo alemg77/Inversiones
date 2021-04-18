@@ -2,8 +2,8 @@ package com.a6.inversiones.application
 
 import android.app.Application
 import com.a6.inversiones.MarketStockViewModel
-import com.a6.inversiones.data.MarketStackRepository
 import com.a6.inversiones.data.SharedPreferencesManager
+import com.a6.inversiones.data.StockRepository
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -15,7 +15,7 @@ class KoinApplication : Application() {
 
     private val myModule: Module = module {
         factory { SharedPreferencesManager(androidApplication()) }
-        factory { MarketStackRepository(androidApplication()) }
+        factory { StockRepository(androidApplication()) }
         viewModel { MarketStockViewModel() }
     }
 

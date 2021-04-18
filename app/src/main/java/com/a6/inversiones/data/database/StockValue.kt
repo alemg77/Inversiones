@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity
-data class StockData(
+data class StockValue(
     @SerializedName("date") val date: String,
     @SerializedName("value") val value: Double,
     @SerializedName("symbol") val symbol: String,
@@ -14,10 +14,10 @@ data class StockData(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
-    constructor(stockData: StockData) : this(
-        stockData.date,
-        stockData.value,
-        stockData.symbol
+    constructor(stockValue: StockValue) : this(
+        stockValue.date,
+        stockValue.value,
+        stockValue.symbol
     )
 
 }

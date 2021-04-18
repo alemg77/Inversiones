@@ -188,6 +188,8 @@ class SharedPreferencesManager(app: Application) {
             "LYG"
         )
 
+        val SYMBOLS = SYMBOLS1 + SYMBOLS2 + SYMBOLS3 + SYMBOLS4
+
         private const val PREFERENCES_FILE = "secret_shared_prefs"
     }
 }
