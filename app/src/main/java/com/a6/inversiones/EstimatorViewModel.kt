@@ -20,6 +20,21 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
     private val evaluate = EvaluateStock()
 
+
+    fun evaluateBuy(symbol: List<String>, buy: Double) {
+        viewModelScope.launch {
+            for (i in symbol.indices) {
+                val db = marketStockRepository.getStockValue(symbol[i])
+                if (!db.isNullOrEmpty()) {
+                    val evaluation = evaluate.evaluateBuy(db, buy)
+                    if (evaluation > 0) {
+                        Log.d(TAG, "Comprar ${symbol[i]} , confianza: $evaluation")
+                    }
+                }
+            }
+        }
+    }
+
     fun evalueteCoeficiente(symbol: List<String>) {
 
         val buy = 0.15

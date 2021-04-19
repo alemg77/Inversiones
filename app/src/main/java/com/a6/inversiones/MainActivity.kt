@@ -20,42 +20,20 @@ class MainActivity : AppCompatActivity() {
 
         val localDate = LocalDateTime.now().toLocalDate()
         //val viewModel = MarketStockViewModel()
+
+        //viewModel.getNewStockValue(ALL_SYMBOLS, 4)
+
         //viewModel.getNewDividends(SYMBOLS)
 
         //viewModel.getStockValue("AAPL")
 
         val viewModel = EstimatorViewModel()
-        viewModel.evalueteCoeficiente(SYMBOLS1 + SYMBOLS2 + SYMBOLS3)
+        //viewModel.evalueteCoeficiente(ALL_SYMBOLS)
+        viewModel.evaluateBuy(ALL_WITH_DIVIDEND, 0.20)
 
 
         Log.d(TAG, "Fin del onCreate en MainActivity")
     }
-
-
-    private fun readFromFile() {
-
-        var ret = ""
-
-        try {
-            val inputStream: InputStream = openFileInput("config.txt")
-            if (inputStream != null) {
-                val inputStreamReader = InputStreamReader(inputStream)
-                val bufferedReader = BufferedReader(inputStreamReader)
-                var receiveString: String? = ""
-                val stringBuilder = StringBuilder()
-                while (bufferedReader.readLine().also { receiveString = it } != null) {
-                    stringBuilder.append("\n").append(receiveString)
-                }
-                inputStream.close()
-                ret = stringBuilder.toString()
-            }
-        } catch (e: FileNotFoundException) {
-            Log.e("login activity", "File not found: " + e.toString())
-        } catch (e: IOException) {
-            Log.e("login activity", "Can not read file: " + e.toString())
-        }
-    }
-
 
     private fun checkPermission(): Boolean {
         return (applicationContext?.let {
@@ -196,7 +174,8 @@ class MainActivity : AppCompatActivity() {
             "LYG",
             "VIV",
             "SBUX",
-            "UNP"
+            "UNP",
+            "HLT",
         )
 
         val SYMBOLS3 = listOf(
@@ -223,22 +202,22 @@ class MainActivity : AppCompatActivity() {
             "TOT",
             "AMGN",
             "BHP",
-            "HMC"
+            "HMC",
         )
 
-        val SYMBOLS = SYMBOLS1 + SYMBOLS2 + SYMBOLS3
+
 
         val SYMBOLS_WITHOUT_DIVIDEND = listOf(
             "BIOX",
             "ZM",
             "ADGO",
             "BIDU",
-            "AMD",
             "DIS",
             "PYPL",
             "NFLX",
             "FB",
             "AMD",
+            "DVA",
             "JD",
             "ETSY",
             "BA",
@@ -259,6 +238,9 @@ class MainActivity : AppCompatActivity() {
             "CX",
             "SPOT"
         )
+
+        val ALL_WITH_DIVIDEND = SYMBOLS1 + SYMBOLS2 + SYMBOLS3
+        val ALL_SYMBOLS = SYMBOLS1 + SYMBOLS2 + SYMBOLS3 + SYMBOLS_WITHOUT_DIVIDEND
     }
 
 }

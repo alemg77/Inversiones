@@ -62,10 +62,20 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    fun getNewStockValue(symbols: List<String>) {
+    fun getNewStockValue(symbols: List<String>, num: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             val arrayList = ArrayList<String>(symbols)
-            stockRepository.getNewStockValue(arrayList)
+            stockRepository.getNewStockValue(arrayList, num)
+        }
+    }
+
+    fun getNewStockValue(symbol: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val newStockValue = stockRepository.getNewStockValue(symbol)) {
+                is DataResult.Error -> {
+                    Log.e(TAG, "No se pudo encontrar datos de $symbol")
+                }
+            }
         }
     }
 
@@ -86,8 +96,6 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
             }
         }
     }
-
-
 
     companion object {
         const val TAG = "TAGG VIEW MODEL"

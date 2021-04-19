@@ -73,8 +73,7 @@ class StockRepository(app: Application) {
         }
     }
 
-
-    private suspend fun getNewStockValue(symbols: String): DataResult<out Any> {
+    suspend fun getNewStockValue(symbols: String): DataResult<out Any> {
         return when (val response = apiMarketStack.getEndOfDay(symbols)) {
             is DataResult.Error -> {
                 response
@@ -109,16 +108,17 @@ class StockRepository(app: Application) {
         return getNewStockValue(string)
     }
 
-    suspend fun getNewStockValue(symbols: ArrayList<String>) {
+    suspend fun getNewStockValue(symbols: ArrayList<String>, num: Int) {
         var i = 0
         while (i < symbols.size) {
-            if (i + 4 > symbols.size) {
+            if (i + num > symbols.size) {
                 getNewStockValue(symbols.subList(i, symbols.size))
             } else {
-                getNewStockValue(symbols.subList(i, i + 4))
+                getNewStockValue(symbols.subList(i, i + num))
             }
             i += 4
         }
+        Log.d(TAG, "Fin de la busqueda de datos nuevos!!!")
     }
 
 
