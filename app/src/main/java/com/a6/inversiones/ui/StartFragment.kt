@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import com.a6.inversiones.R
 import com.a6.inversiones.databinding.FragmentStartBinding
 
 
@@ -12,11 +14,6 @@ class StartFragment : Fragment() {
 
     private lateinit var binding: FragmentStartBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -24,18 +21,11 @@ class StartFragment : Fragment() {
 
         binding = FragmentStartBinding.inflate(inflater, container, false)
 
+        binding.buttonCalcular.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.calculateFragment)
+        }
         return binding.root
     }
 
-    companion object {
 
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            StartFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
-    }
 }

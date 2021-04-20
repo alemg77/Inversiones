@@ -19,20 +19,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         val localDate = LocalDateTime.now().toLocalDate()
-        //val viewModel = MarketStockViewModel()
-
-        //viewModel.getNewStockValue(ALL_SYMBOLS, 4)
-
-        //viewModel.getNewDividends(SYMBOLS)
-
-        //viewModel.getStockValue("AAPL")
-
-        val viewModel = EstimatorViewModel()
-        //viewModel.evalueteCoeficiente(ALL_SYMBOLS)
-        viewModel.evaluateBuy(ALL_WITH_DIVIDEND, 0.20)
-
-
-        Log.d(TAG, "Fin del onCreate en MainActivity")
     }
 
     private fun checkPermission(): Boolean {
@@ -172,7 +158,6 @@ class MainActivity : AppCompatActivity() {
             "AEM",
             "TMO",
             "LYG",
-            "VIV",
             "SBUX",
             "UNP",
             "HLT",
@@ -184,7 +169,6 @@ class MainActivity : AppCompatActivity() {
             "EBAY",
             "GSK",
             "FDX",
-            "CS",
             "MMM",
             "PAAS",
             "BMY",
@@ -205,42 +189,51 @@ class MainActivity : AppCompatActivity() {
             "HMC",
         )
 
-
+        val SYMBOLS_CHINA = listOf(
+            "BABA",
+            "BIDU",
+            "JD",
+            "VIV",
+            "TEN"
+        )
 
         val SYMBOLS_WITHOUT_DIVIDEND = listOf(
             "BIOX",
             "ZM",
             "ADGO",
-            "BIDU",
             "DIS",
             "PYPL",
             "NFLX",
             "FB",
             "AMD",
             "DVA",
-            "JD",
             "ETSY",
             "BA",
-            "TEN",
             "ADBE",
             "GOOGL",
             "SHOP",
             "SQ",
             "BIIB",
             "TRIP",
-            "SNOW",
             "AMZN",
             "SNAP",
             "TSLA",
             "DOCU",
-            "BABA",
             "MELI",
             "CX",
             "SPOT"
         )
 
+
         val ALL_WITH_DIVIDEND = SYMBOLS1 + SYMBOLS2 + SYMBOLS3
         val ALL_SYMBOLS = SYMBOLS1 + SYMBOLS2 + SYMBOLS3 + SYMBOLS_WITHOUT_DIVIDEND
+
+
+        val SYMBOLS_NO_INVERTIR = listOf(
+            "CS",
+            "SNOW"
+        )
+
     }
 
 }

@@ -28,12 +28,12 @@ class StockRepository(app: Application) {
         return db?.stockValueDao()?.get(data.symbol, data.date)
     }
 
-    suspend fun getDivident(symbol: String): DataResult<out Any> {
+    suspend fun getDividend(symbol: String): Double {
         val dividens = db?.dividendDao()?.get(symbol)
         return if (dividens.isNullOrEmpty()) {
-            getDividendToday(symbol)
+            0.0
         } else {
-            DataResult.Success(dividens[0])
+            dividens[0].value
         }
     }
 
@@ -45,7 +45,6 @@ class StockRepository(app: Application) {
             DataResult.Success(dividens)
         }
     }
-
 
     suspend fun getDividendToday(symbol: String): DataResult<out Any> {
         return when (val response = apiYahoo.getGeneric(symbol)) {

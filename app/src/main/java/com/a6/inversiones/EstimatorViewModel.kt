@@ -20,13 +20,24 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
     private val evaluate = EvaluateStock()
 
+    private suspend fun extraRiskBuy(symbol: String): Double {
+        val dividend = marketStockRepository.getDividend(symbol)
+        return if (dividend == 0.0) {
+            0.02
+        } else if (dividend < 0.05) {
+            0.01
+        } else {
+            0.00
+        }
+    }
+
 
     fun evaluateBuy(symbol: List<String>, buy: Double) {
         viewModelScope.launch {
             for (i in symbol.indices) {
                 val db = marketStockRepository.getStockValue(symbol[i])
                 if (!db.isNullOrEmpty()) {
-                    val evaluation = evaluate.evaluateBuy(db, buy)
+                    val evaluation = evaluate.evaluateBuy(db, buy + extraRiskBuy(symbol[i]))
                     if (evaluation > 0) {
                         Log.d(TAG, "Comprar ${symbol[i]} , confianza: $evaluation")
                     }
@@ -37,7 +48,7 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
     fun evalueteCoeficiente(symbol: List<String>) {
 
-        val buy = 0.15
+        var buy = 0.15
         val sell = 0.15
 
         viewModelScope.launch {
@@ -47,8 +58,10 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
                 val db = marketStockRepository.getStockValue(symbol[i])
 
+                val dividend = marketStockRepository.getDividend(symbol[i])
+
                 db?.let {
-                    val test = evaluate.testLogic(db, buy, sell)
+                    val test = evaluate.testLogic(db, buy + extraRiskBuy(symbol[i]), sell)
                     if (test.daysInvested > 0) {
                         coeficientes.add(test)
                         Log.d(TAG, " ${symbol[i]} rindio ${test.result} ")

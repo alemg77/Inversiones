@@ -34,15 +34,7 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
     fun getNewDividends(symbol: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
             for (i in symbol.indices) {
-                when (val result = stockRepository.getDivident(symbol[i])) {
-                    is DataResult.Success -> {
-                        val dividend = result.data as Dividend
-                        Log.d(TAG, dividend.toString())
-                    }
-                    else -> {
-
-                    }
-                }
+                stockRepository.getDividend(symbol[i])
             }
         }
     }

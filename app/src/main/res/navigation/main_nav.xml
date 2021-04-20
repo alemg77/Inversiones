@@ -9,5 +9,22 @@
         android:id="@+id/startFragment"
         android:name="com.a6.inversiones.ui.StartFragment"
         android:label="fragment_start"
-        tools:layout="@layout/fragment_start" />
+        tools:layout="@layout/fragment_start">
+        <action
+            android:id="@+id/action_startFragment_to_calculateFragment"
+            app:destination="@id/calculateFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_newValuesFragment"
+            app:destination="@id/newValuesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/calculateFragment"
+        android:name="com.a6.inversiones.ui.CalculateFragment"
+        android:label="fragment_calculate"
+        tools:layout="@layout/fragment_calculate" />
+    <fragment
+        android:id="@+id/newValuesFragment"
+        android:name="com.a6.inversiones.ui.NewValuesFragment"
+        android:label="fragment_new_values"
+        tools:layout="@layout/fragment_new_values" />
 </navigation>
