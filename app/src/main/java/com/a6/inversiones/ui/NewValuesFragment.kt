@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.a6.inversiones.MainActivity.Companion.ALL_SYMBOLS
+import com.a6.inversiones.MainActivity.Companion.NEW_SYMBOLS
 import com.a6.inversiones.MarketStockViewModel
 import com.a6.inversiones.databinding.FragmentNewValuesBinding
 
@@ -26,9 +26,10 @@ class NewValuesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getNewStockValue(ALL_SYMBOLS, 20)
+        val viewModel = MarketStockViewModel()
+        viewModel.getNewStockValue(NEW_SYMBOLS, 4)
 
-        viewModel.getNewDividends(ALL_SYMBOLS)
+        viewModel.getNewDividends(NEW_SYMBOLS)
 
         //viewModel.getStockValue("AAPL")
     }

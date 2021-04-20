@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_startFragment_to_newValuesFragment"
             app:destination="@id/newValuesFragment" />
+        <action
+            android:id="@+id/action_startFragment_to_chooseBuyFragment"
+            app:destination="@id/chooseBuyFragment" />
     </fragment>
     <fragment
         android:id="@+id/calculateFragment"
@@ -27,4 +30,8 @@
         android:name="com.a6.inversiones.ui.NewValuesFragment"
         android:label="fragment_new_values"
         tools:layout="@layout/fragment_new_values" />
+    <fragment
+        android:id="@+id/chooseBuyFragment"
+        android:name="com.a6.inversiones.ui.ChooseBuyFragment"
+        android:label="ChooseBuyFragment" />
 </navigation>

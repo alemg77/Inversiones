@@ -1,11 +1,14 @@
 package com.a6.inversiones
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.a6.inversiones.MainActivity.Companion.TAG
 import com.a6.inversiones.data.StockRepository
 import com.a6.inversiones.data.analysis.EvaluateStock
+import com.a6.inversiones.data.models.AnalisisResult
 import com.a6.inversiones.data.models.TestResult
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
@@ -20,6 +23,15 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
     private val evaluate = EvaluateStock()
 
+
+    private val _analisis = MutableLiveData<AnalisisResult>()
+    val analisis: LiveData<AnalisisResult> = _analisis
+
+
+    private fun loadUsers() {
+        // Do an asynchronous operation to fetch users.
+    }
+
     private suspend fun extraRiskBuy(symbol: String): Double {
         val dividend = marketStockRepository.getDividend(symbol)
         return if (dividend == 0.0) {
@@ -31,28 +43,24 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
         }
     }
 
-
     fun evaluateBuy(symbol: List<String>, buy: Double) {
         viewModelScope.launch {
             for (i in symbol.indices) {
                 val db = marketStockRepository.getStockValue(symbol[i])
+                val dividend = marketStockRepository.getDividend(symbol[i])
                 if (!db.isNullOrEmpty()) {
                     val evaluation = evaluate.evaluateBuy(db, buy + extraRiskBuy(symbol[i]))
-                    if (evaluation > 0) {
-                        Log.d(TAG, "Comprar ${symbol[i]} , confianza: $evaluation")
+                    if (evaluation > 1) {
+                        _analisis.postValue(AnalisisResult(symbol[i], evaluation, dividend))
                     }
                 }
             }
         }
     }
 
-    fun evalueteCoeficiente(symbol: List<String>) {
-
-        var buy = 0.15
-        val sell = 0.15
+    fun evalueteCoeficiente(symbol: List<String>, buy: Double, sell: Double) {
 
         viewModelScope.launch {
-
 
             for (i in symbol.indices) {
 
@@ -60,7 +68,10 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
                 val dividend = marketStockRepository.getDividend(symbol[i])
 
-                db?.let {
+                if (db.isNullOrEmpty()) {
+                    Log.e(TAG, " No se encontraron dados de ${symbol[i]}")
+                    TODO()
+                } else {
                     val test = evaluate.testLogic(db, buy + extraRiskBuy(symbol[i]), sell)
                     if (test.daysInvested > 0) {
                         coeficientes.add(test)
@@ -73,12 +84,10 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
             coeficientes.sortBy { it.result }
 
             // Contemplo haber perdido los mejores por seguridad
-            /*
             for (num in 1..(coeficientes.size / 10)) {
                 Log.e(TAG, "Removed!!")
                 coeficientes.removeLast()
             }
-             */
 
             Log.d(TAG, "Los peores fueron:")
             for (i in 0..4) {

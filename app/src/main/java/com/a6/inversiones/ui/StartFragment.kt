@@ -24,6 +24,18 @@ class StartFragment : Fragment() {
         binding.buttonCalcular.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(R.id.calculateFragment)
         }
+
+        binding.buttonComprar.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.chooseBuyFragment)
+        }
+
+        /*
+        binding.buttonActualizarDatos.setOnClickListener {
+            Navigation.findNavController(binding.root).navigate(R.id.newValuesFragment)
+        }
+
+         */
+
         return binding.root
     }
 

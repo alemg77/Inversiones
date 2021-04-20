@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
             askForPermission()
         }
 
+
         val localDate = LocalDateTime.now().toLocalDate()
     }
 
@@ -80,7 +81,6 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "TAGGG"
         const val PERMISSION_REQUEST_CODE = 99
 
-
         const val SYMBOL_Jpmorgan_Chase = "JPM"
         const val SYMBOL_United_States_Steel = "X"
         const val Petroleo_Brasileiro = "PBR"
@@ -132,7 +132,13 @@ class MainActivity : AppCompatActivity() {
             Pfizer,
             Mastercard_Inc,
             Astrazeneca,
-            Taiwan_Semiconductor
+            Taiwan_Semiconductor,
+            "WDAY",
+            "ABNB",
+            "AMAT",
+            "AYX",
+            "LRCX",
+            "QRVO"
         )
 
         val SYMBOLS2 = listOf(
@@ -174,12 +180,10 @@ class MainActivity : AppCompatActivity() {
             "BMY",
             "SAP",
             "FCX",
-            "SAP",
             "FCX",
             "RTX",
             "COST",
             "CAH",
-            "GILD",
             "SLB",
             "SAN",
             "NEM",
@@ -189,12 +193,25 @@ class MainActivity : AppCompatActivity() {
             "HMC",
         )
 
+        val NEW_SYMBOLS = listOf(
+            "WDAY",
+            "ABNB",
+            "AMAT",
+            "AYX",
+            "LRCX",
+            "QRVO"
+        )
+
         val SYMBOLS_CHINA = listOf(
             "BABA",
             "BIDU",
             "JD",
             "VIV",
             "TEN"
+        )
+
+        val SYMBOLS_ENDEUDADOS_MAS_100_PORCIENTO = listOf(
+            "GILD",
         )
 
         val SYMBOLS_WITHOUT_DIVIDEND = listOf(
@@ -221,7 +238,7 @@ class MainActivity : AppCompatActivity() {
             "DOCU",
             "MELI",
             "CX",
-            "SPOT"
+            "SPOT",
         )
 
 

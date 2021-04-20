@@ -11,14 +11,24 @@
         android:layout_height="match_parent">
 
         <Button
+            android:id="@+id/buttonComprar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Evaluar posibles compras"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
             android:id="@+id/buttonActualizarDatos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="Actualizar datos"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintHorizontal_bias="0.347"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/buttonCalcular"
@@ -28,7 +38,7 @@
             android:text="Calcular"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonActualizarDatos" />
+            app:layout_constraintTop_toBottomOf="@+id/buttonComprar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
