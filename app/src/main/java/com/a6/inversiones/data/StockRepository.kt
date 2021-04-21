@@ -115,7 +115,7 @@ class StockRepository(app: Application) {
             } else {
                 getNewStockValue(symbols.subList(i, i + num))
             }
-            i += 4
+            i += num
         }
         Log.d(TAG, "Fin de la busqueda de datos nuevos!!!")
     }

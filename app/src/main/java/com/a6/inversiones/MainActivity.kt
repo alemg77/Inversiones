@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
             askForPermission()
         }
 
-
         val localDate = LocalDateTime.now().toLocalDate()
     }
 
@@ -107,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         const val Taiwan_Semiconductor = "TSM"
 
 
-        val SYMBOLS1 = listOf(
+        val SYMBOLS_CEDEAR = listOf(
             SYMBOL_Jpmorgan_Chase,
             SYMBOL_United_States_Steel,
             Petroleo_Brasileiro,
@@ -133,20 +132,18 @@ class MainActivity : AppCompatActivity() {
             Mastercard_Inc,
             Astrazeneca,
             Taiwan_Semiconductor,
-            "WDAY",
-            "ABNB",
-            "AMAT",
-            "AYX",
-            "LRCX",
-            "QRVO"
+            "UNH",
+            "AMZN",
+            "C",
+            "V",
+            //"DISN",
+            "WFC",
+            "PG",
         )
 
-        val SYMBOLS2 = listOf(
-            "UNH",
-            "C",
+
+        val SYMBOLS1 = listOf(
             "BBD",
-            "V",
-            "WFC",
             "AUY",
             "ABBV",
             "RIO",
@@ -157,7 +154,6 @@ class MainActivity : AppCompatActivity() {
             "AXP",
             "CAT",
             "MCD",
-            "PG",
             "AVGO",
             "GGB",
             "ORCL",
@@ -167,9 +163,15 @@ class MainActivity : AppCompatActivity() {
             "SBUX",
             "UNP",
             "HLT",
+            "WDAY",
+            "ABNB",
+            "AMAT",
+            "AYX",
+            "LRCX",
+            "QRVO"
         )
 
-        val SYMBOLS3 = listOf(
+        val SYMBOLS2 = listOf(
             "CL",
             "CVX",
             "EBAY",
@@ -191,9 +193,6 @@ class MainActivity : AppCompatActivity() {
             "AMGN",
             "BHP",
             "HMC",
-        )
-
-        val NEW_SYMBOLS = listOf(
             "WDAY",
             "ABNB",
             "AMAT",
@@ -207,7 +206,7 @@ class MainActivity : AppCompatActivity() {
             "BIDU",
             "JD",
             "VIV",
-            "TEN"
+            "TEN",
         )
 
         val SYMBOLS_ENDEUDADOS_MAS_100_PORCIENTO = listOf(
@@ -232,7 +231,6 @@ class MainActivity : AppCompatActivity() {
             "SQ",
             "BIIB",
             "TRIP",
-            "AMZN",
             "SNAP",
             "TSLA",
             "DOCU",
@@ -241,15 +239,18 @@ class MainActivity : AppCompatActivity() {
             "SPOT",
         )
 
-
-        val ALL_WITH_DIVIDEND = SYMBOLS1 + SYMBOLS2 + SYMBOLS3
-        val ALL_SYMBOLS = SYMBOLS1 + SYMBOLS2 + SYMBOLS3 + SYMBOLS_WITHOUT_DIVIDEND
-
-
         val SYMBOLS_NO_INVERTIR = listOf(
             "CS",
             "SNOW"
         )
+
+        val ALL_SYMBOLS = SYMBOLS_CEDEAR +
+                SYMBOLS2 +
+                SYMBOLS1 +
+                SYMBOLS_WITHOUT_DIVIDEND +
+                SYMBOLS_CHINA +
+                SYMBOLS_NO_INVERTIR +
+                SYMBOLS_ENDEUDADOS_MAS_100_PORCIENTO
 
     }
 

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.a6.inversiones.EstimatorViewModel
-import com.a6.inversiones.MainActivity.Companion.ALL_SYMBOLS
+import com.a6.inversiones.MainActivity
 import com.a6.inversiones.databinding.FragmentCalculateBinding
 
 
@@ -27,7 +27,7 @@ class CalculateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonEvaluarCoeficientes.setOnClickListener {
-            viewModel.evalueteCoeficiente(ALL_SYMBOLS, 0.15, 0.15)
+            viewModel.evalueteCoeficiente(MainActivity.SYMBOLS_CEDEAR, 0.13, 0.13)
         }
 
 
