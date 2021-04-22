@@ -27,9 +27,8 @@ class CalculateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonEvaluarCoeficientes.setOnClickListener {
-            viewModel.evalueteCoeficiente(MainActivity.SYMBOLS_CEDEAR, 0.13, 0.13)
+            viewModel.evalueteCoeficiente(MainActivity.SYMBOLS_ETORO, 0.15, 0.15)
         }
-
 
     }
 

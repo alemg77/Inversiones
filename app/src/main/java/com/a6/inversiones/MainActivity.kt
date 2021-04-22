@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
@@ -136,7 +135,6 @@ class MainActivity : AppCompatActivity() {
             "AMZN",
             "C",
             "V",
-            //"DISN",
             "WFC",
             "PG",
         )
@@ -196,7 +194,6 @@ class MainActivity : AppCompatActivity() {
             "WDAY",
             "ABNB",
             "AMAT",
-            "AYX",
             "LRCX",
             "QRVO"
         )
@@ -243,6 +240,10 @@ class MainActivity : AppCompatActivity() {
             "CS",
             "SNOW"
         )
+
+        val SYMBOLS_ETORO = SYMBOLS_CEDEAR + SYMBOLS2 +
+                SYMBOLS1 +
+                SYMBOLS_WITHOUT_DIVIDEND
 
         val ALL_SYMBOLS = SYMBOLS_CEDEAR +
                 SYMBOLS2 +

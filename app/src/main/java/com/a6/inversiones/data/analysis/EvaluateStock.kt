@@ -1,5 +1,7 @@
 package com.a6.inversiones.data.analysis
 
+import android.util.Log
+import com.a6.inversiones.MainActivity.Companion.TAG
 import com.a6.inversiones.data.database.StockValue
 import com.a6.inversiones.data.models.TestResult
 
@@ -12,6 +14,18 @@ class EvaluateStock() {
 
     fun evaluateBuy(data: List<StockValue>, buy: Double): Double {
         val test = maxValue(data) * (1 - buy)
+
+        var maxDrop = 0.0
+        for (i in 0 until data.size - 2) {
+            if (data[i].value < data[i + 2].value) {
+                val drop = data[i + 2].value / data[i].value
+                if (drop > maxDrop) {
+                    maxDrop = drop
+                }
+            }
+        }
+
+        Log.d(TAG, "${data[0].symbol} tuvo un drop de $maxDrop")
 
         // Si se desploma un dia, no comprar
         if ((data[0].value * 1.07) < data[1].value) {
@@ -98,23 +112,22 @@ class EvaluateStock() {
             val k = data.size - MIN_DAY_ANALISIS_INICIO - i
             val subData = data.subList(k, data.size)
 
-            if (subData[subData.size - 1].value < subData[subData.size - MIN_DAY_ANALISIS_INICIO].value) {
-                if (money > 0) {
-                    if (data.size < subData.size + MIN_DAY_ANALISIS_FIN) {
-                        if (evaluateBuy(subData, buy) > 0) {
-                            stock = (money * CONSTANTE_COMISION) / subData[0].value
-                            money = 0.0
-                            valueLastBuy = subData[0].value
-                        }
-                    }
-                } else {
-                    if (evaluateRetire(subData, valueLastBuy, sell)) {
-                        valueLastSell = subData[0].value
-                        money = stock * valueLastSell * CONSTANTE_COMISION
-                        stock = 0.0
+            if (money > 0) {
+                if (data.size > subData.size + MIN_DAY_ANALISIS_FIN) {
+                    if (evaluateBuy(subData, buy) > 0) {
+                        stock = (money * CONSTANTE_COMISION) / subData[0].value
+                        money = 0.0
+                        valueLastBuy = subData[0].value
                     }
                 }
+            } else {
+                if (evaluateRetire(subData, valueLastBuy, sell)) {
+                    valueLastSell = subData[0].value
+                    money = stock * valueLastSell * CONSTANTE_COMISION
+                    stock = 0.0
+                }
             }
+
             if (money == 0.0) {
                 daysInverted++
             }
@@ -129,10 +142,10 @@ class EvaluateStock() {
     companion object {
 
         // No se puede decidir sin historial
-        const val MIN_DAY_ANALISIS_INICIO = 80
+        const val MIN_DAY_ANALISIS_INICIO = 70
 
         // No quiero analizar el coeficiente si no tengo datos suficientes para analizar despues que paso
-        const val MIN_DAY_ANALISIS_FIN = 30
+        const val MIN_DAY_ANALISIS_FIN = 60
 
         const val CONSTANTE_COMISION: Double = 0.98 // 1,5% de comision y 0,5% de spreed
 

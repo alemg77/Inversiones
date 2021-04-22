@@ -66,8 +66,6 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
                 val db = marketStockRepository.getStockValue(symbol[i])
 
-                val dividend = marketStockRepository.getDividend(symbol[i])
-
                 if (db.isNullOrEmpty()) {
                     Log.e(TAG, " No se encontraron dados de ${symbol[i]}")
                     TODO()

@@ -29,9 +29,12 @@ class StartFragment : Fragment() {
             Navigation.findNavController(binding.root).navigate(R.id.chooseBuyFragment)
         }
 
+        /*
         binding.buttonActualizarDatos.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(R.id.newValuesFragment)
         }
+
+         */
         return binding.root
     }
 
