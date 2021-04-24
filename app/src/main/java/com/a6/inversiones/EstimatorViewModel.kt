@@ -19,7 +19,6 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
 
     private val marketStockRepository: StockRepository by inject()
 
-    private var coeficientes: MutableList<TestResult> = mutableListOf()
 
     private val evaluate = EvaluateStock()
 
@@ -27,6 +26,9 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
     private val _analisis = MutableLiveData<AnalisisResult>()
     val analisis: LiveData<AnalisisResult> = _analisis
 
+
+    private val _resultado = MutableLiveData<Double>()
+    val resultado: LiveData<Double> = _resultado
 
     private fun loadUsers() {
         // Do an asynchronous operation to fetch users.
@@ -46,10 +48,10 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
     fun evaluateBuy(symbol: List<String>, buy: Double) {
         viewModelScope.launch {
             for (i in symbol.indices) {
-                val db = marketStockRepository.getStockValue(symbol[i])
+                val data = marketStockRepository.getStockValue(symbol[i])
                 val dividend = marketStockRepository.getDividend(symbol[i])
-                if (!db.isNullOrEmpty()) {
-                    val evaluation = evaluate.evaluateBuy(db, buy + extraRiskBuy(symbol[i]))
+                if (!data.isNullOrEmpty()) {
+                    val evaluation = evaluate.evaluateBuy(data, buy + extraRiskBuy(symbol[i]))
                     if (evaluation > 1) {
                         _analisis.postValue(AnalisisResult(symbol[i], evaluation, dividend))
                     }
@@ -58,67 +60,78 @@ class EstimatorViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    fun evalueteCoeficiente(symbol: List<String>, buy: Double, sell: Double) {
-
+    fun evalueteCoeficiente(symbol: List<String>) {
         viewModelScope.launch {
 
-            for (i in symbol.indices) {
-
-                val db = marketStockRepository.getStockValue(symbol[i])
-
-                if (db.isNullOrEmpty()) {
-                    Log.e(TAG, " No se encontraron dados de ${symbol[i]}")
-                    TODO()
-                } else {
-                    val test = evaluate.testLogic(db, buy + extraRiskBuy(symbol[i]), sell)
-                    if (test.daysInvested > 0) {
-                        coeficientes.add(test)
-                        Log.d(TAG, " ${symbol[i]} rindio ${test.result} ")
-                    }
+            var bestresult = 0.0
+            for (i in 0..20) {
+                var buy = 0.12 + i.toDouble() / 100
+                val result = evalueteCoeficiente(symbol, buy, buy)
+                if (result > bestresult) {
+                    bestresult = result
+                    Log.e(TAG, "Hasta ahora el mejor resultado es $bestresult con $buy")
                 }
             }
 
-            // Ordeno de menor a mallor
-            coeficientes.sortBy { it.result }
-
-            // Contemplo haber perdido los mejores por seguridad
-            for (num in 1..(coeficientes.size / 10)) {
-                Log.e(TAG, "Removed!!")
-                coeficientes.removeLast()
-            }
-
-            Log.d(TAG, "Los peores fueron:")
-            for (i in 0..4) {
-                Log.d(TAG, "${coeficientes[i].symbol}  rindio ${coeficientes[i].result} ")
-            }
-
-            var accumulateResult = 0.0
-            var accumulateDays = 0
-
-            coeficientes.forEach {
-                accumulateResult += it.result
-                accumulateDays += it.daysInvested
-            }
-
-            val redimientoPromedio = accumulateResult / coeficientes.size
-
-            val averageDays = accumulateDays.toDouble() / coeficientes.size
-
-            Log.d(
-                TAG,
-                "Inverti en ${coeficientes.size} empresas, rindio $redimientoPromedio y trabajo $averageDays "
-            )
-
-            val aux3 = (redimientoPromedio / 100.0).pow(260.0 / averageDays)
-
-            Log.e(TAG, " $aux3")
-
-            Log.d(TAG, "Fin de los calculos coeficientes")
-
-            Log.d(TAG, "Fin de los calculos")
-            Log.d(TAG, "Fin de los calculos")
-
         }
+    }
+
+    suspend fun evalueteCoeficiente(symbol: List<String>, buy: Double, sell: Double): Double {
+
+        val coeficientes: MutableList<TestResult> = mutableListOf()
+
+        for (i in symbol.indices) {
+
+            val data = marketStockRepository.getStockValue(symbol[i])
+
+            if (data.isNullOrEmpty()) {
+                Log.e(TAG, " No se encontraron dados de ${symbol[i]}")
+                TODO()
+            } else {
+                val test = evaluate.testLogic(data, buy + extraRiskBuy(symbol[i]), sell)
+                if (test.daysInvested > 0) {
+                    coeficientes.add(test)
+                    Log.d(TAG, " ${symbol[i]} rindio ${test.result} ")
+                }
+            }
+        }
+
+        // Ordeno de menor a mallor
+        coeficientes.sortBy { it.result }
+
+        // Contemplo haber perdido los mejores por seguridad
+        for (num in 1..(coeficientes.size / 10)) {
+            //Log.e(TAG, "Removed!!")
+            coeficientes.removeLast()
+        }
+
+
+        /*
+        Log.d(TAG, "Los peores fueron:")
+        for (i in 0..4) {
+            Log.d(TAG, "${coeficientes[i].symbol}  rindio ${coeficientes[i].result} ")
+        }
+         */
+
+        var accumulateResult = 0.0
+        var accumulateDays = 0
+
+        coeficientes.forEach {
+            accumulateResult += it.result
+            accumulateDays += it.daysInvested
+        }
+
+        val redimientoPromedio = accumulateResult / coeficientes.size
+
+        val averageDays = accumulateDays.toDouble() / coeficientes.size
+
+        Log.d(
+            TAG,
+            "Inverti en ${coeficientes.size} empresas, rindio $redimientoPromedio y trabajo $averageDays "
+        )
+
+        //return redimientoPromedio
+        return (redimientoPromedio / 100.0).pow(260.0 / averageDays)
     }
 
 }

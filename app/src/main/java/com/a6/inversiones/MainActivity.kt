@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.a6.inversiones.data.database.StockValue
+import com.a6.inversiones.data.models.DataFileStockCSV
 import java.io.*
 import java.time.LocalDateTime
 
@@ -19,6 +21,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         val localDate = LocalDateTime.now().toLocalDate()
+
+
+        //readArchivoStockCSV("jnj.csv", "JNJ")
     }
 
     private fun checkPermission(): Boolean {
@@ -56,6 +61,52 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun readArchivoStockCSV(filename: String, symbol: String): MutableList<StockValue> {
+        val appSpecificExternalDir = File(getExternalFilesDir(null), filename)
+        val fileInputStream = FileInputStream(appSpecificExternalDir)
+        val inputStreamReader = InputStreamReader(fileInputStream)
+        val bufferedReader = BufferedReader(inputStreamReader)
+
+        if (bufferedReader.readLine() != "Date,High,Low,Open,Close,Volume,Adj Close") {
+            Log.e(TAG, "No era un archivo de Stock CSV")
+        }
+
+        val dataFile = mutableListOf<DataFileStockCSV>()
+
+        var line = bufferedReader.readLine()
+        while (!line.isNullOrEmpty()) {
+            Log.d(TAG, line)
+            val date = line.substringBefore(",")
+            line = line.substringAfter(",")
+            val high = line.substringBefore(",").toDouble()
+            line = line.substringAfter(",")
+            val low = line.substringBefore(",").toDouble()
+            line = line.substringAfter(",")
+            val open = line.substringBefore(",").toDouble()
+            line = line.substringAfter(",")
+            val close = line.substringBefore(",").toDouble()
+            line = line.substringAfter(",")
+            val volume = line.substringBefore(",").toDouble()
+            line = line.substringAfter(",")
+            val adj = line.substringBefore(",").toDouble()
+            Log.d(TAG, "$date $high $low $open $close $volume $adj")
+            dataFile.add(DataFileStockCSV(date, high, low, open, close, volume, adj))
+            line = bufferedReader.readLine()
+        }
+
+        val data = mutableListOf<StockValue>()
+
+        for (i in 0 until dataFile.size) {
+            val d = dataFile[dataFile.size - 1 - i]
+            val stockValue = StockValue(d.date, d.close, symbol)
+            data.add(stockValue)
+        }
+
+        fileInputStream.close()
+        return data
+    }
+
+
     fun testArchivo() {
         val filename = "archivo.cvs"
         val appSpecificExternalDir = File(getExternalFilesDir(null), filename)
@@ -78,9 +129,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val TAG = "TAGGG"
         const val PERMISSION_REQUEST_CODE = 99
-
         const val SYMBOL_Jpmorgan_Chase = "JPM"
-        const val SYMBOL_United_States_Steel = "X"
         const val Petroleo_Brasileiro = "PBR"
         const val APLE = "AAPL"
         const val Walmart = "WMT"
@@ -107,7 +156,6 @@ class MainActivity : AppCompatActivity() {
 
         val SYMBOLS_CEDEAR = listOf(
             SYMBOL_Jpmorgan_Chase,
-            SYMBOL_United_States_Steel,
             Petroleo_Brasileiro,
             APLE,
             Walmart,
@@ -122,32 +170,31 @@ class MainActivity : AppCompatActivity() {
             Qualcomm,
             Nike,
             Bank_of_America,
-            Nike,
-            Harmony_Gold,
-            Vale,
             General_Electric,
             Caterpillar,
             Pfizer,
             Mastercard_Inc,
             Astrazeneca,
-            Taiwan_Semiconductor,
             "UNH",
             "AMZN",
             "C",
             "V",
+            //"ADI",
             "WFC",
             "PG",
         )
 
-
         val SYMBOLS1 = listOf(
             "BBD",
+            Harmony_Gold,
             "AUY",
             "ABBV",
             "RIO",
+            Vale,
             "DE",
             "ITUB",
             "AIG",
+            Taiwan_Semiconductor,
             "SONY",
             "AXP",
             "CAT",
@@ -163,8 +210,7 @@ class MainActivity : AppCompatActivity() {
             "HLT",
             "WDAY",
             "ABNB",
-            "AMAT",
-            "AYX",
+
             "LRCX",
             "QRVO"
         )
@@ -178,9 +224,6 @@ class MainActivity : AppCompatActivity() {
             "MMM",
             "PAAS",
             "BMY",
-            "SAP",
-            "FCX",
-            "FCX",
             "RTX",
             "COST",
             "CAH",
@@ -193,7 +236,6 @@ class MainActivity : AppCompatActivity() {
             "HMC",
             "WDAY",
             "ABNB",
-            "AMAT",
             "LRCX",
             "QRVO"
         )
@@ -211,9 +253,6 @@ class MainActivity : AppCompatActivity() {
         )
 
         val SYMBOLS_WITHOUT_DIVIDEND = listOf(
-            "BIOX",
-            "ZM",
-            "ADGO",
             "DIS",
             "PYPL",
             "NFLX",
@@ -226,13 +265,8 @@ class MainActivity : AppCompatActivity() {
             "GOOGL",
             "SHOP",
             "SQ",
-            "BIIB",
-            "TRIP",
-            "SNAP",
-            "TSLA",
             "DOCU",
             "MELI",
-            "CX",
             "SPOT",
         )
 
@@ -240,6 +274,33 @@ class MainActivity : AppCompatActivity() {
             "CS",
             "SNOW"
         )
+
+        val SYMBOLS_EMPRESAS_QUE_DESPLOMAN = listOf(
+            "BIIB",
+            "AYX",
+            "SAP",
+        )
+
+        // Estas empresas rindieron muchisimo
+        val SYMBOLS_TRAMPA_1 = listOf(
+            "BIOX",
+            "AMAT",
+            "CX",
+            "TRIP",
+        )
+
+        // Estas empresas son las que mas rindieron
+        val SYMBOLS_TRAMPA_2 = listOf(
+            "SNAP",
+            "ZM",
+            "X",
+            "FCX",
+            "TSLA",
+        )
+
+        val SYMBOLS_TRAMPA = SYMBOLS_TRAMPA_1 + SYMBOLS_TRAMPA_2
+
+        // "ADGO",
 
         val SYMBOLS_ETORO = SYMBOLS_CEDEAR + SYMBOLS2 +
                 SYMBOLS1 +

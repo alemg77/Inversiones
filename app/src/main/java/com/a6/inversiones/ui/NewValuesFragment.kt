@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.a6.inversiones.MainActivity
 import com.a6.inversiones.MarketStockViewModel
 import com.a6.inversiones.databinding.FragmentNewValuesBinding
 
@@ -28,7 +27,7 @@ class NewValuesFragment : Fragment() {
 
         val viewModel = MarketStockViewModel()
 
-        viewModel.getNewStockValue(MainActivity.ALL_SYMBOLS, 50)
+        //viewModel.getNewStockValue(MainActivity.ALL_SYMBOLS, 50)
 
         //viewModel.getNewDividends(NEW_SYMBOLS)
 

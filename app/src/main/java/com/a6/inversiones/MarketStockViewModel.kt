@@ -7,7 +7,6 @@ import com.a6.inversiones.data.SharedPreferencesManager
 import com.a6.inversiones.data.StockRepository
 import com.a6.inversiones.data.analysis.EvaluateStock
 import com.a6.inversiones.data.database.Dividend
-import com.a6.inversiones.data.database.StockValue
 import com.a6.inversiones.data.models.Estimador
 import com.a6.inversiones.data.network.models.DataResult
 import kotlinx.coroutines.Dispatchers
@@ -71,6 +70,7 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
         }
     }
 
+    /*
     fun getStockValue(symbol: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val data = stockRepository.getStockValue(symbol)
@@ -78,16 +78,21 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
         }
     }
 
+     */
+
+    /*
     fun buscarMinimos(symbol: List<String>) {
         viewModelScope.launch {
             for (i in symbol.indices) {
-                val db: List<StockValue> = stockRepository.getStockValue(symbol[i])!!
+                val db = stockRepository.getStockValue(symbol[i])!!
                 val maxValue = evaluate.maxValue(db)
                 val actual = 100 * db[0].value / maxValue
                 Log.d(TAG, " ${symbol[i]} esta al $actual%")
             }
         }
     }
+
+     */
 
     companion object {
         const val TAG = "TAGG VIEW MODEL"

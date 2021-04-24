@@ -2,18 +2,17 @@ package com.a6.inversiones.data.analysis
 
 import android.util.Log
 import com.a6.inversiones.MainActivity.Companion.TAG
-import com.a6.inversiones.data.database.StockValue
+import com.a6.inversiones.data.models.AnalisisStockValue
 import com.a6.inversiones.data.models.TestResult
 
 class EvaluateStock() {
 
-    fun maxValue(data: List<StockValue>): Double {
+    fun maxValue(data: MutableList<AnalisisStockValue>): Double {
         val highestPrice = data.maxByOrNull { it.value } ?: return 0.0
         return highestPrice.value
     }
 
-    fun evaluateBuy(data: List<StockValue>, buy: Double): Double {
-        val test = maxValue(data) * (1 - buy)
+    fun evaluateBuy(data: MutableList<AnalisisStockValue>, buy: Double): Double {
 
         var maxDrop = 0.0
         for (i in 0 until data.size - 2) {
@@ -24,11 +23,26 @@ class EvaluateStock() {
                 }
             }
         }
+        //Log.d(TAG, "${data[0].symbol} tuvo un drop de $maxDrop")
 
-        Log.d(TAG, "${data[0].symbol} tuvo un drop de $maxDrop")
+
+        // No invertir en empresas que se desploman completamente
+        if (maxDrop > 1.4) {
+            Log.e(TAG, " En ${data[0].symbol} no vamos a invertir nunca !!!!!!!!!!!!!!!!!!!")
+            return 0.0
+        }
+
+
+        var extraRisk = 0.0
+        if (maxDrop > 1.2) {
+            // extraRisk = 0.10
+        }
+
+        val test = maxValue(data) * (1 - (buy + extraRisk))
+
 
         // Si se desploma un dia, no comprar
-        if ((data[0].value * 1.07) < data[1].value) {
+        if ((data[0].value * 1.05) < data[1].value) {
             return 0.0
         }
 
@@ -42,15 +56,6 @@ class EvaluateStock() {
             return 0.0
         }
 
-        // Muchos dias callendo, no comprar
-        if ((data[0].value < data[1].value)
-            && (data[1].value < data[2].value)
-            && (data[2].value < data[3].value)
-            && (data[3].value < data[4].value)
-            && (data[4].value < data[5].value)
-        ) {
-            return 0.0
-        }
 
         return if (data[0].value > test) {
             0.0
@@ -61,7 +66,7 @@ class EvaluateStock() {
     }
 
     private fun evaluateRetire(
-        data: List<StockValue>,
+        data: MutableList<AnalisisStockValue>,
         lastBuyValue: Double,
         sell: Double
     ): Boolean {
@@ -99,7 +104,7 @@ class EvaluateStock() {
 
     }
 
-    fun testLogic(data: List<StockValue>, buy: Double, sell: Double): TestResult {
+    fun testLogic(data: MutableList<AnalisisStockValue>, buy: Double, sell: Double): TestResult {
 
         var money = 100.0
         var valueLastBuy = 0.0
@@ -121,7 +126,12 @@ class EvaluateStock() {
                     }
                 }
             } else {
-                if (evaluateRetire(subData, valueLastBuy, sell)) {
+                if ((evaluateBuy(subData, buy) == 0.0) && (evaluateRetire(
+                        subData,
+                        valueLastBuy,
+                        sell
+                    ))
+                ) {
                     valueLastSell = subData[0].value
                     money = stock * valueLastSell * CONSTANTE_COMISION
                     stock = 0.0

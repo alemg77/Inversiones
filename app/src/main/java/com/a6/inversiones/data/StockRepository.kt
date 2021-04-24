@@ -6,10 +6,12 @@ import com.a6.inversiones.MainActivity.Companion.TAG
 import com.a6.inversiones.data.database.Dividend
 import com.a6.inversiones.data.database.StockDataBase
 import com.a6.inversiones.data.database.StockValue
+import com.a6.inversiones.data.models.AnalisisStockValue
 import com.a6.inversiones.data.network.MarketStackRetrofitBuilder
 import com.a6.inversiones.data.network.models.DataResult
 import com.a6.inversiones.data.network.models.EndOfDayResponse
 import com.a6.inversiones.data.network.models.YahooFinance
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class StockRepository(app: Application) {
@@ -20,8 +22,22 @@ class StockRepository(app: Application) {
 
     private val db = StockDataBase.getInstance(app)
 
-    suspend fun getStockValue(symbol: String): List<StockValue>? {
-        return db?.stockValueDao()?.getAll(symbol)
+    suspend fun getStockValue(symbol: String): MutableList<AnalisisStockValue> {
+
+        val all = db?.stockValueDao()?.getAll(symbol)
+        val data = mutableListOf<AnalisisStockValue>()
+
+        if (!all.isNullOrEmpty()) {
+            for (i in all.indices) {
+                val date = LocalDate.parse(all[i].date)
+                val day = (date.year - 2000) * 365 + date.dayOfYear
+                data.add(AnalisisStockValue(day, all[i].value, all[i].symbol))
+            }
+        }
+
+        data.sortBy { -it.date }
+
+        return data
     }
 
     suspend fun getStockValue(data: StockValue): List<StockValue>? {
