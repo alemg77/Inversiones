@@ -79,9 +79,10 @@ class StockRepository(app: Application) {
                     Log.e(TAG, "$symbol No tiene dividendos")
                     DataResult.Error("No tiene")
                 } else {
+                    Log.d(TAG, "$symbol tiene: ${substring.toDouble()}")
                     val localDate = LocalDateTime.now().toLocalDate()
                     val dividend = Dividend(symbol, substring.toDouble(), localDate.toString())
-                    db?.dividendDao()?.insert(dividend)
+                    //db?.dividendDao()?.insert(dividend)
                     DataResult.Success(dividend)
                 }
             }

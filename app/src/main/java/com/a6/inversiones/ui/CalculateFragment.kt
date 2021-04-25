@@ -32,7 +32,7 @@ class CalculateFragment : Fragment() {
             Log.e(TAG, "Resultado = $it")
         })
 
-        viewModel.evalueteCoeficiente(MainActivity.SYMBOLS_ETORO)
+        viewModel.evaluarCoeficiente(MainActivity.SYMBOLS_BIGGEST)
 
     }
 

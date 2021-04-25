@@ -33,7 +33,7 @@ class MarketStockViewModel : ViewModel(), KoinComponent {
     fun getNewDividends(symbol: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
             for (i in symbol.indices) {
-                stockRepository.getDividend(symbol[i])
+                stockRepository.getDividendToday(symbol[i])
             }
         }
     }

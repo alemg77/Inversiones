@@ -1,45 +1,25 @@
 package com.a6.inversiones.data.analysis
 
-import android.util.Log
-import com.a6.inversiones.MainActivity.Companion.TAG
 import com.a6.inversiones.data.models.AnalisisStockValue
 import com.a6.inversiones.data.models.TestResult
 
 class EvaluateStock() {
 
     fun maxValue(data: MutableList<AnalisisStockValue>): Double {
-        val highestPrice = data.maxByOrNull { it.value } ?: return 0.0
-        return highestPrice.value
+        var highestPrice = data[0].value
+        var days = data.size - 1
+        if (days > 252) {
+            days = 252
+        }
+        for (i in 1..days) {
+            if (data[i].value > highestPrice) {
+                highestPrice = data[i].value
+            }
+        }
+        return highestPrice
     }
 
     fun evaluateBuy(data: MutableList<AnalisisStockValue>, buy: Double): Double {
-
-        var maxDrop = 0.0
-        for (i in 0 until data.size - 2) {
-            if (data[i].value < data[i + 2].value) {
-                val drop = data[i + 2].value / data[i].value
-                if (drop > maxDrop) {
-                    maxDrop = drop
-                }
-            }
-        }
-        //Log.d(TAG, "${data[0].symbol} tuvo un drop de $maxDrop")
-
-
-        // No invertir en empresas que se desploman completamente
-        if (maxDrop > 1.4) {
-            Log.e(TAG, " En ${data[0].symbol} no vamos a invertir nunca !!!!!!!!!!!!!!!!!!!")
-            return 0.0
-        }
-
-
-        var extraRisk = 0.0
-        if (maxDrop > 1.2) {
-            // extraRisk = 0.10
-        }
-
-        val test = maxValue(data) * (1 - (buy + extraRisk))
-
 
         // Si se desploma un dia, no comprar
         if ((data[0].value * 1.05) < data[1].value) {
@@ -56,6 +36,29 @@ class EvaluateStock() {
             return 0.0
         }
 
+        var extraRisk = 0.0
+
+        /*
+        var maxDrop = 0.0
+        for (i in 0 until data.size - 2) {
+            if (data[i].value < data[i + 2].value) {
+                val drop = data[i + 2].value / data[i].value
+                if (drop > maxDrop) {
+                    maxDrop = drop
+                }
+            }
+        }
+        // No invertir en empresas que se desploman completamente
+        if (maxDrop > 1.4) {
+            Log.e(TAG, " En ${data[0].symbol} no vamos a invertir nunca !!!!!!!!!!!!!!!!!!!")
+            return 0.0
+        }
+        if (maxDrop > 1.2) {
+            // extraRisk = 0.10
+        }
+         */
+
+        val test = maxValue(data) * (1 - (buy + extraRisk))
 
         return if (data[0].value > test) {
             0.0
@@ -111,6 +114,7 @@ class EvaluateStock() {
         var valueLastSell = 0.0
         var stock = 0.0
         var daysInverted = 0
+        var timesInverted = 0
 
         for (i in 0..data.size - MIN_DAY_ANALISIS_INICIO) {
 
@@ -122,6 +126,7 @@ class EvaluateStock() {
                     if (evaluateBuy(subData, buy) > 0) {
                         stock = (money * CONSTANTE_COMISION) / subData[0].value
                         money = 0.0
+                        timesInverted++
                         valueLastBuy = subData[0].value
                     }
                 }
@@ -145,7 +150,7 @@ class EvaluateStock() {
 
         val rendimiento = stock * data[0].value * CONSTANTE_COMISION + money
 
-        return TestResult(daysInverted, rendimiento, data[0].symbol)
+        return TestResult(daysInverted, rendimiento, data[0].symbol, timesInverted)
 
     }
 

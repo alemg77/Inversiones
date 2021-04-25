@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.a6.inversiones.data.database.StockValue
+import com.a6.inversiones.data.models.AnalisisStockValue
 import com.a6.inversiones.data.models.DataFileStockCSV
 import java.io.*
 import java.time.LocalDateTime
@@ -22,8 +22,17 @@ class MainActivity : AppCompatActivity() {
 
         val localDate = LocalDateTime.now().toLocalDate()
 
+        val viewModel = EstimatorViewModel()
 
-        //readArchivoStockCSV("jnj.csv", "JNJ")
+        try {
+            val data = readArchivoStockCSV("aapl.csv", "AAPL")
+
+            val evalueteCoeficiente = viewModel.buscarCoeficiente(data)
+
+            Log.d(TAG, evalueteCoeficiente.toString())
+        } catch (e: Exception) {
+            Log.e(TAG, e.toString())
+        }
     }
 
     private fun checkPermission(): Boolean {
@@ -61,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun readArchivoStockCSV(filename: String, symbol: String): MutableList<StockValue> {
+    fun readArchivoStockCSV(filename: String, symbol: String): MutableList<AnalisisStockValue> {
         val appSpecificExternalDir = File(getExternalFilesDir(null), filename)
         val fileInputStream = FileInputStream(appSpecificExternalDir)
         val inputStreamReader = InputStreamReader(fileInputStream)
@@ -75,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
         var line = bufferedReader.readLine()
         while (!line.isNullOrEmpty()) {
-            Log.d(TAG, line)
+            //Log.d(TAG, line)
             val date = line.substringBefore(",")
             line = line.substringAfter(",")
             val high = line.substringBefore(",").toDouble()
@@ -89,19 +98,17 @@ class MainActivity : AppCompatActivity() {
             val volume = line.substringBefore(",").toDouble()
             line = line.substringAfter(",")
             val adj = line.substringBefore(",").toDouble()
-            Log.d(TAG, "$date $high $low $open $close $volume $adj")
             dataFile.add(DataFileStockCSV(date, high, low, open, close, volume, adj))
             line = bufferedReader.readLine()
         }
 
-        val data = mutableListOf<StockValue>()
+        val data = mutableListOf<AnalisisStockValue>()
 
         for (i in 0 until dataFile.size) {
             val d = dataFile[dataFile.size - 1 - i]
-            val stockValue = StockValue(d.date, d.close, symbol)
+            val stockValue = AnalisisStockValue(d.date, d.close, symbol)
             data.add(stockValue)
         }
-
         fileInputStream.close()
         return data
     }
@@ -130,7 +137,7 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "TAGGG"
         const val PERMISSION_REQUEST_CODE = 99
         const val SYMBOL_Jpmorgan_Chase = "JPM"
-        const val Petroleo_Brasileiro = "PBR"
+        const val Petroleo_Brasileiro = "PBR"     // 31B
         const val APLE = "AAPL"
         const val Walmart = "WMT"
         const val Nvidia = "NVDA"
@@ -151,40 +158,48 @@ class MainActivity : AppCompatActivity() {
         const val Astrazeneca = "AZN"
         const val Intel = "INTC"
         const val Qualcomm = "QCOM"
-        const val Taiwan_Semiconductor = "TSM"
+        const val Taiwan_Semiconductor = "TSM"  // 615B
+        const val Berkshire_Hathaway = "BRK.B"  //
+        const val VolksWagen = "VOW3.DE"        // 115B
+        const val Samsung = "SMAN.L"            // 444B
+        const val Google = "GOOG"               // 1560B
 
-
-        val SYMBOLS_CEDEAR = listOf(
-            SYMBOL_Jpmorgan_Chase,
-            Petroleo_Brasileiro,
-            APLE,
-            Walmart,
-            Nvidia,
-            Microsoft,
-            ExxonMobil,
-            AT_T,
-            BARRIC_GOLD,
-            COCA_COLA,
-            JOHNSON_AND_JOHNSON,
-            Intel,
-            Qualcomm,
-            Nike,
-            Bank_of_America,
-            General_Electric,
-            Caterpillar,
-            Pfizer,
-            Mastercard_Inc,
-            Astrazeneca,
-            "UNH",
-            "AMZN",
-            "C",
-            "V",
-            //"ADI",
-            "WFC",
-            "PG",
+        // Companias con mas de 200B de capital de mercado
+        val SYMBOLS_BIGGEST = listOf(
+            APLE,                   // 2254B
+            Microsoft,              // 1969B
+            "AMZN",                 // 1684B
+            Taiwan_Semiconductor,   // 615B
+            SYMBOL_Jpmorgan_Chase,  // 455B
+            Walmart,                //
+            Nvidia,                 //
+            JOHNSON_AND_JOHNSON,    //
+            "V",                    // 491B
+            "UNH",                  // 378B
+            Mastercard_Inc,         // 384B
+            Bank_of_America,        // 336B
+            "PG",                   // 327B
+            Intel,                  // 241B
+            COCA_COLA,              // 234B
+            AT_T,                   // 224B
+            Pfizer,                 // 215B
+            Nike,                   // 205B
         )
 
-        val SYMBOLS1 = listOf(
+        // Companias de 50 a 200B
+        val SYMBOLS_BIG = listOf(
+            Qualcomm,
+            ExxonMobil,
+            "WFC",              // 181B
+            "C",                // 148B
+            Caterpillar,        // 120B
+            General_Electric,
+            Astrazeneca,
+        )
+
+        val SYMBOLS = listOf(
+            BARRIC_GOLD,
+            Petroleo_Brasileiro,
             "BBD",
             Harmony_Gold,
             "AUY",
@@ -194,7 +209,6 @@ class MainActivity : AppCompatActivity() {
             "DE",
             "ITUB",
             "AIG",
-            Taiwan_Semiconductor,
             "SONY",
             "AXP",
             "CAT",
@@ -210,12 +224,8 @@ class MainActivity : AppCompatActivity() {
             "HLT",
             "WDAY",
             "ABNB",
-
             "LRCX",
-            "QRVO"
-        )
-
-        val SYMBOLS2 = listOf(
+            "QRVO",
             "CL",
             "CVX",
             "EBAY",
@@ -237,22 +247,8 @@ class MainActivity : AppCompatActivity() {
             "WDAY",
             "ABNB",
             "LRCX",
-            "QRVO"
-        )
-
-        val SYMBOLS_CHINA = listOf(
-            "BABA",
-            "BIDU",
-            "JD",
-            "VIV",
-            "TEN",
-        )
-
-        val SYMBOLS_ENDEUDADOS_MAS_100_PORCIENTO = listOf(
-            "GILD",
-        )
-
-        val SYMBOLS_WITHOUT_DIVIDEND = listOf(
+            "QRVO",
+            "GILD",     // +100% de deuda
             "DIS",
             "PYPL",
             "NFLX",
@@ -270,6 +266,16 @@ class MainActivity : AppCompatActivity() {
             "SPOT",
         )
 
+        const val CHINA_CONSTRUCTION_BANK = "0939.HK" // 624B
+
+        val SYMBOLS_CHINA = listOf(
+            "BABA",
+            "BIDU",
+            "JD",
+            "VIV",
+            "TEN",
+        )
+
         val SYMBOLS_NO_INVERTIR = listOf(
             "CS",
             "SNOW"
@@ -282,15 +288,11 @@ class MainActivity : AppCompatActivity() {
         )
 
         // Estas empresas rindieron muchisimo
-        val SYMBOLS_TRAMPA_1 = listOf(
+        val SYMBOLS_TRAMPA = listOf(
             "BIOX",
             "AMAT",
             "CX",
             "TRIP",
-        )
-
-        // Estas empresas son las que mas rindieron
-        val SYMBOLS_TRAMPA_2 = listOf(
             "SNAP",
             "ZM",
             "X",
@@ -298,21 +300,18 @@ class MainActivity : AppCompatActivity() {
             "TSLA",
         )
 
-        val SYMBOLS_TRAMPA = SYMBOLS_TRAMPA_1 + SYMBOLS_TRAMPA_2
+        // "ADGO"
 
-        // "ADGO",
+        val SYMBOLS_ETORO = SYMBOLS_BIG +
+                SYMBOLS_BIGGEST +
+                SYMBOLS
 
-        val SYMBOLS_ETORO = SYMBOLS_CEDEAR + SYMBOLS2 +
-                SYMBOLS1 +
-                SYMBOLS_WITHOUT_DIVIDEND
-
-        val ALL_SYMBOLS = SYMBOLS_CEDEAR +
-                SYMBOLS2 +
-                SYMBOLS1 +
-                SYMBOLS_WITHOUT_DIVIDEND +
+        val ALL_SYMBOLS = SYMBOLS_ETORO +
                 SYMBOLS_CHINA +
+                SYMBOLS_TRAMPA +
                 SYMBOLS_NO_INVERTIR +
-                SYMBOLS_ENDEUDADOS_MAS_100_PORCIENTO
+                SYMBOLS_EMPRESAS_QUE_DESPLOMAN
+
 
     }
 

@@ -57,7 +57,9 @@ class MarketStackRetrofitBuilder {
 
     companion object {
         private const val BASE_URL = "http://api.marketstack.com/v1/"
-        private const val API_KEY = "52633eabf9ae27d5be31aecdd2867ab2"
+
+        // private const val API_KEY = "52633eabf9ae27d5be31aecdd2867ab2"
+        private const val API_KEY = "51622b993041a086e9679449cf8c9a55"
     }
 
 
